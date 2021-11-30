@@ -30,18 +30,38 @@ worms = [1,2]
 means = [mean1, mean2]
 stds = [std1, std2]
 
-# make figure
-fig = Figure(
-    )
+# make barplot
+fig1 = Figure(
+)
 
-ax = Axis(
-    fig[1,1],
+ax1 = Axis(
+    fig1[1,1],
     xticks = ([1,2],["Worm 1","Worm 2"]),
     ylabel = "Average Speed (mm/s)",
 )
 
-barplot!(ax, worms, means)
+barplot!(ax1, worms, means)
 errorbars!(worms, means, stds, whiskerwidth = 50)
 
-# save figure
-save("testfigure.png", fig)
+# consolidate data for boxplot
+x1 = repeat([1],length(worm1.avgSpeed))
+y1 = worm1.avgSpeed
+x2 = repeat([2],length(worm2.avgSpeed))
+y2 = worm2.avgSpeed
+
+# make boxplot
+fig2 = Figure(
+)
+
+ax2 = Axis(
+    fig2[1,1],
+    xticks = ([1,2],["Worm 1","Worm 2"]),
+    ylabel = "Average Speed (mm/s)",
+)
+
+boxplot!(ax2, x1, y1)
+boxplot!(ax2, x2, y2)
+
+# save figures
+save("testbarplot.png", fig1)
+save("testboxplot.png", fig2)
