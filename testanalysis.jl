@@ -12,8 +12,10 @@ df = CSV.read("testresults.csv", DataFrame)
 
 # make new DF with just worm tracks
 filterdf = filter(row -> row.avgSpeed > .132, df)
+# doesn't work as well as I want it to bc it needs to be very accurate 
+# to separate worm measurements from background measurements
 
-# make new DF for each worm
+# manually make new DF for each worm
 worm1 = df[[3, 4, 9, 13, 15, 20, 24, 34, 39], :]
 worm2 = df[[41, 43, 45], :]
 
@@ -41,5 +43,5 @@ ax = Axis(
 barplot!(ax, worms, means)
 errorbars!(worms, means, stds, whiskerwidth = 50)
 
-# save fig
+# save figure
 save("testfigure.png", fig)
