@@ -1,0 +1,18 @@
+,,Speed (# body bends/20s),,,Time Spent Moving (s),,,,
+Video #,Worm #,0-20s,20-40s,40-60s,Fowards,Backwards,Not,# Direction Changes,Notes
+7,,3,5,8,46,0,14,0,went off screen
+8,,11,13,,52,0,0,0,
+9,1,0,0,0,0,0,60,0,only minor shifts
+,2,0,0,1,6,0,60,0,"only minor shifts, moved slightly very slowly"
+,3,0,1,1,0,11,49,3,
+,4,0,7,12,39,6,13,10,
+10,,7,11,,49,4,0,4,went off screen
+11,1,0,0,0,0,0,60,0,only minor shifts
+,2,2,4,0,20,7,33,6,
+,3,0,0,0,0,0,60,0,only minor shifts
+,4,7,4,12,22,15,3,10,
+12,1,17,15,16,60,0,0,0,
+,2,7,8,7,60,0,0,0,
+,3,11,8,12,43,9,8,6,
+13,1,8,9,6,57,3,0,2,
+,2,12,9,6,56,1,3,2,
