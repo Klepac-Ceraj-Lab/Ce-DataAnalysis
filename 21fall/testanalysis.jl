@@ -4,7 +4,7 @@ using GLMakie
 using Statistics
 
 # make DF from CSV
-df = CSV.read("testresults.csv", DataFrame)
+df = CSV.read("21fall/testresults.csv", DataFrame)
 
 # tracks that are actually worms (from `3 labels.avi`)
 #   worm 1: 3, 4, 9, 13, 15, 20, 24, 34, 39
