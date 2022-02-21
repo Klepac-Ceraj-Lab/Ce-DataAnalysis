@@ -37,7 +37,7 @@ ax1 = Axis(
 
 hist!(ax1, inst_speeds)
 
-save("test1-insthist.png", fig1)
+save("22spring/test1-insthist.png", fig1)
 
 # histogram of average speeds
 fig2 = Figure(
@@ -51,7 +51,7 @@ ax2 = Axis(
 
 hist!(ax2, indiv_means)
 
-save("test1-avghist.png", fig2)
+save("22spring/test1-avghist.png", fig2)
 
 # scatterplot
 fig3 = Figure(
@@ -65,7 +65,7 @@ ax3 = Axis(
 
 scatter!(ax3, indiv_means, indiv_stds)
 
-save("test1-scatter.png", fig3)
+save("22spring/test1-scatter.png", fig3)
 
 
 # barplot of time spent moving
@@ -85,7 +85,7 @@ ax4 = Axis(
 barplot!(ax4, directions, time_means)
 errorbars!(directions, time_means, time_stds, whiskerwidth = 50)
 
-save("test1-timebar.png", fig4)
+save("22spring/test1-timebar.png", fig4)
 
 
 # barplot of direction changes
@@ -105,7 +105,7 @@ ax5 = Axis(
 barplot!(ax5, strains, changes_means)
 errorbars!(strains, changes_means, changes_stds, whiskerwidth = 50)
 
-save("test1-dirbar.png", fig5)
+save("22spring/test1-dirbar.png", fig5)
 
 # boxplot of average speeds
 
@@ -142,3 +142,39 @@ ax7 = Axis(
 boxplot!(strains, inst_speeds)
 
 save("22spring/test1-instbox.png", fig7)
+
+# violin plot of instantaneous speeds
+
+strains = repeat([1], length(inst_speeds))
+
+fig8 = Figure(
+)
+
+ax8 = Axis(
+    fig8[1,1],
+    xlabel = "Strains",
+    xticks = ([1], ["MT"]),
+    ylabel = "'Instantaneous' Speed (# body bends/20sec)",
+)
+
+violin!(strains, inst_speeds)
+
+save("22spring/test1-instviolin.png", fig8)
+
+# violin plot of average speeds
+
+strains = repeat([1], length(indiv_means))
+
+fig9 = Figure(
+)
+
+ax9 = Axis(
+    fig9[1,1],
+    xlabel = "Strains",
+    xticks = ([1], ["MT"]),
+    ylabel = "Average Speed (# body bends/20sec)",
+)
+
+violin!(strains, indiv_means)
+
+save("22spring/test1-avgviolin.png", fig9)
