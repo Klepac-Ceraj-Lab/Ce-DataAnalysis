@@ -22,7 +22,10 @@ time_stds = std.(eachcol(time))
 changes_means = [mean(changes)]
 changes_stds = [std(changes)]
 
-# hitogram of all speeds
+# histogram of instantaneous speeds
+
+inst_speeds = vec(Matrix(speed))
+
 fig1 = Figure(
 )
 
@@ -32,7 +35,7 @@ ax1 = Axis(
     ylabel = "# of Occurances",
 )
 
-hist!(ax1, vec(Matrix(speed)))
+hist!(ax1, inst_speeds)
 
 save("test1-insthist.png", fig1)
 
@@ -49,7 +52,6 @@ ax2 = Axis(
 hist!(ax2, indiv_means)
 
 save("test1-avghist.png", fig2)
-
 
 # scatterplot
 fig3 = Figure(
@@ -105,4 +107,38 @@ errorbars!(strains, changes_means, changes_stds, whiskerwidth = 50)
 
 save("test1-dirbar.png", fig5)
 
+# boxplot of average speeds
 
+strains = repeat([1], length(indiv_means))
+
+fig6 = Figure(
+)
+
+ax6 = Axis(
+    fig6[1,1],
+    xlabel = "Strains",
+    xticks = ([1], ["MT"]),
+    ylabel = "Average Speed (# body bends/20sec)",
+)
+
+boxplot!(strains, indiv_means)
+
+save("22spring/test1-avgbox.png", fig6)
+
+# boxplot of instantaneous speeds
+
+strains = repeat([1], length(inst_speeds))
+
+fig7 = Figure(
+)
+
+ax7 = Axis(
+    fig7[1,1],
+    xlabel = "Strains",
+    xticks = ([1], ["MT"]),
+    ylabel = "'Instantaneous' Speed (# body bends/20sec)",
+)
+
+boxplot!(strains, inst_speeds)
+
+save("22spring/test1-instbox.png", fig7)
