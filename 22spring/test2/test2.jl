@@ -4,11 +4,12 @@ using CategoricalArrays
 using GLMakie
 using Statistics
 
+# EXTRACT DATA
+
 # extract relevant data from WormLab Speed file into DF
 # id = condition (worm strain, doapmine presecne, E. coli prescence)
 # track = track number
 # speed = instantaneous speed of worm
-
 function extractdata!(df, file::String, id)
     newdf = DataFrame(CSV.File(file, header=5))
     select!(newdf, Not([1,2])) # filters out columns that are not relevant data
@@ -30,8 +31,6 @@ function extractdata!(df, file::String, id)
     return df
 end
 
-
-
 # extract and compile all data into one DF
 
 data = DataFrame()
@@ -52,19 +51,31 @@ for f in 70:73
     extractdata!(data, joinpath("./22spring/test2/data/", string(f, "Speed.csv")), "M9_CB")
 end
 
+# make categorical arrays for plotting
 data.medium = categorical(map(i-> split(i, '_')[1], data.id))
 data.worm = categorical(map(i-> split(i, '_')[2], data.id))
 data.id = categorical(data.id, levels=["DA_N2", "DA_CB", "M9_N2", "M9_CB"])
 
-levelcode.(data.id)
 
-# individual track summary stats
+
+
+# SUMMARY STATS
+
+# individual track stats
 tracks = groupby(data, [:id, :track])
-trackstats = combine(tracks, :speed => mean => :mean, :speed => std => :std) # calculate mean and std of each track from each condition
+trackstats = combine(tracks, :speed => mean => :mean, :speed => std => :std)
 
-# condition summary stats
+# condition stats from individual stats 
 conditions = groupby(trackstats, [:id])
 conditionstats = combine(conditions, :mean => mean, :std => std)
+
+# condition stats from all data
+all = groupby(data, [:id])
+allstats = combine(all, :speed => mean => :mean, :speed => std => :std)
+
+
+
+# PLOTS
 
 # boxplot
 fig = Figure(
