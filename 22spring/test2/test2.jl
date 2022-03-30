@@ -20,13 +20,18 @@ filter!(!ismissing, vid52) # filters out missing
 filter!(x->x≠0,vid52) # filters out '0'
 
 # extract relevant data from WormLab Speed file
-function extractdata(file::String)
-    df = DataFrame(CSV.File(file))
-    delete!(df, 1:3) # filters out columns that are not data 
-    select!(df, Not([1,2])) # filters out rows that are not data 
-    df = vec(Matrix(df)) # convert DF to vector
-    filter!(!ismissing, df) # filters out missing
-    filter!(x->x≠0,df) # filters out '0'
+function extractdata!(df, file::String)
+    newdf = DataFrame(CSV.File(file))
+    delete!(newdf, 1:3) # filters out columns that are not data 
+    select!(newdf, Not([1,2])) # filters out rows that are not data 
+    newdf = vec(Matrix(newdf)) # convert newDF to vector
+    filter!(!ismissing, newdf) # filters out missing
+    filter!(x->x≠0,newdf) # filters out '0'
+    
+    id = replace(basename(file), r"(\d+)Speed\.csv" => s"\1")
+    id = parse(Int, id)
+    newdf[!, :id] = fill(id, nrow(newdf))
+    append!(df, newdf)
     return df
 end
 
