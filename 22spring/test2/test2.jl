@@ -58,6 +58,6 @@ ax1 = Axis(
     ylabel = "Average Speed (um/s)",
 )
 
-boxplot!(data.medium, data.speed, group=data.worm)
+boxplot!(data.medium, data.speed, dodge=data.worm)
 
 fig
