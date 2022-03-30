@@ -27,6 +27,7 @@ function extractdata(file::String)
     df = vec(Matrix(df)) # convert DF to vector
     filter!(!ismissing, df) # filters out missing
     filter!(x->x≠0,df) # filters out '0'
+    return df
 end
 
 datafiles = readdir("./22spring/test2/data/")
