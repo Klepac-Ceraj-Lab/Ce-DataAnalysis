@@ -67,7 +67,7 @@ trackstats = combine(tracks, :speed => mean => :mean, :speed => std => :std)
 
 # condition stats from individual stats 
 conditions = groupby(trackstats, [:id])
-conditionstats = combine(conditions, :mean => mean, :std => std)
+conditionstats = combine(conditions, :mean => mean => :meanofmean, :std => mean => :stdofmean, :mean => std => :meanofstd, :std => std => :stdofstd)
 
 # condition stats from all data
 all = groupby(data, [:id])
