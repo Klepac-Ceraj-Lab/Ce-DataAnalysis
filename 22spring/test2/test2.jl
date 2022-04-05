@@ -51,6 +51,10 @@ for f in 70:73
     extractdata!(data, joinpath("./22spring/test2/data/", string(f, "Speed.csv")), "M9_CB")
 end
 
+transform!(data, :speed => ByRow(log) => :logspeed) # add column in data that is log of speed
+
+
+
 # make categorical arrays for plotting
 data.medium = categorical(map(i-> split(i, '_')[1], data.id))
 data.worm = categorical(map(i-> split(i, '_')[2], data.id))
@@ -72,6 +76,19 @@ conditionstats = combine(conditions, :mean => mean => :meanofmean, :std => mean 
 # condition stats from all data
 all = groupby(data, [:id])
 allstats = combine(all, :speed => mean => :mean, :speed => std => :std)
+
+# log stats
+# individual track stats
+logtracks = groupby(data, [:id, :track])
+logtrackstats = combine(logtracks, :logspeed => mean => :logmean, :logspeed => std => :logstd)
+
+# condition stats from individual stats 
+logconditions = groupby(logtrackstats, [:id])
+logconditionstats = combine(logconditions, :logmean => mean => :logmeanofmean, :logstd => mean => :logstdofmean, :logmean => std => :logmeanofstd, :logstd => std => :logstdofstd)
+
+# condition stats from all data
+logall = groupby(data, [:id])
+logallstats = combine(logall, :logspeed => mean => :logmean, :logspeed => std => :logstd)
 
 
 
