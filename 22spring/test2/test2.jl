@@ -67,28 +67,28 @@ data.id = categorical(data.id, levels=["DA_N2", "DA_CB", "M9_N2", "M9_CB"])
 
 # individual track stats
 tracks = groupby(data, [:id, :track])
-trackstats = combine(tracks, :speed => mean => :mean, :speed => std => :std)
+trackstats = combine(tracks, :speed => mean => :meanspeed, :speed => std => :stdspeed)
 
 # condition stats from individual stats 
 conditions = groupby(trackstats, [:id])
-conditionstats = combine(conditions, :mean => mean => :meanofmean, :std => mean => :stdofmean, :mean => std => :meanofstd, :std => std => :stdofstd)
+conditionstats = combine(conditions, :meanspeed => mean => :meanofmeanspeed, :meanspeed => std => :stdofmeanspeed, :stdspeed => mean => :meanofstdspeed, :stdspeed => std => :stdofstdspeed)
 
 # condition stats from all data
 all = groupby(data, [:id])
-allstats = combine(all, :speed => mean => :mean, :speed => std => :std)
+allstats = combine(all, :speed => mean => :meanspeed, :speed => std => :stdspeed)
 
 # log stats
 # individual track stats
 logtracks = groupby(data, [:id, :track])
-logtrackstats = combine(logtracks, :logspeed => mean => :logmean, :logspeed => std => :logstd)
+logtrackstats = combine(logtracks, :logspeed => mean => :meanlogspeed, :logspeed => std => :stdlogspeed)
 
 # condition stats from individual stats 
 logconditions = groupby(logtrackstats, [:id])
-logconditionstats = combine(logconditions, :logmean => mean => :logmeanofmean, :logstd => mean => :logstdofmean, :logmean => std => :logmeanofstd, :logstd => std => :logstdofstd)
+logconditionstats = combine(logconditions, :meanlogspeed => mean => :meanofmeanlogspeed, :meanlogspeed => std => :stdofmeanlogspeed, :stdlogspeed => mean => :meanofstdlogspeed, :stdlogspeed => std => :stdofstdlogspeed)
 
 # condition stats from all data
 logall = groupby(data, [:id])
-logallstats = combine(logall, :logspeed => mean => :logmean, :logspeed => std => :logstd)
+logallstats = combine(logall, :logspeed => mean => :meanlogspeed, :logspeed => std => :stdlogspeed)
 
 
 
