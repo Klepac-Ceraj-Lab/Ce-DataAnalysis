@@ -30,3 +30,5 @@ function extractpositiondata!(df, file::String, id)
       
     return df
 end
+
+newdf = DataFrame(CSV.File(file, header=5))
