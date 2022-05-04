@@ -16,8 +16,8 @@ function extractdata!(df, file::String, id)
 
     if isempty(df)
         tracknum = 1
-    elseif id == last(data.id)
-        tracknum = last(data.track) + 1
+    elseif id == last(df.id)
+        tracknum = last(df.track) + 1
     else
         tracknum = 1
     end
@@ -51,7 +51,7 @@ for f in 70:73
     extractdata!(data, joinpath("./22spring/test2/data/", string(f, "Speed.csv")), "M9_CB")
 end
 
-transform!(data, :speed => ByRow(log) => :logspeed) # add column in data that is log of speed
+datransform!(data, :speed => ByRow(log) => :logspeed) # add column in data that is log of speed
 
 
 
