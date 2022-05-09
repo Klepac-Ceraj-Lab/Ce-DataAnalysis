@@ -103,15 +103,13 @@ end
 # end
 
 data = DataFrame(id=String[], track=Int[], xpos=Float64[], ypos=Float64[])
-file = "./22spring/test3a/data/Position/75Position.csv"
-load_tracks!(data, file)
-load_tracks(file)
 
-files = ["./22spring/test3a/data/Position/75Position.csv", 
-        "./22spring/test3a/data/Position/74Position.csv"]
-
-load_tracks(files)
-
-data = DataFrame(id=String[], track=Int[], xpos=Float64[], ypos=Float64[])
 load_tracks!(data, "./22spring/test3a/data/Position/74Position.csv", "DA_N2_OP50")
 load_tracks!(data, "./22spring/test3a/data/Position/75Position.csv", "DA_N2_OP50")
+load_tracks!(data, "./22spring/test3a/data/Position/76Position.csv", "DA_N2_OP50")
+load_tracks!(data, "./22spring/test3a/data/Position/77Position.csv", "DA_N2_OP50")
+
+load_tracks!(data, "./22spring/test3a/data/Position/78Position.csv", "DA_N2_NGM")
+load_tracks!(data, "./22spring/test3a/data/Position/79Position.csv", "DA_N2_NGM")
+load_tracks!(data, "./22spring/test3a/data/Position/80Position.csv", "DA_N2_NGM")
+load_tracks!(data, "./22spring/test3a/data/Position/81Position.csv", "DA_N2_NGM")
