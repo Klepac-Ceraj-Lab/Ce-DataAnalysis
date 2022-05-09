@@ -23,21 +23,21 @@ function load_tracks!(existingdf, file, id)
         x = collect(skipmissing(tracks[!, 2*tr-1]))
         y = collect(skipmissing(tracks[!, 2*tr]))
         
-        if isempty(existingdf)
-            tracknum = 1
-        elseif id == last(existingdf.id)
-            tracknum = last(existingdf.track) + 1
-        else
-            tracknum = 1
-        end
+        if isempty(existingdf) # if there is no data
+            tracknum = 1 # start from 1
+        elseif id == last(existingdf.id) # if the condition is the same as the last
+            tracknum = last(existingdf.track) + 1 # count up from there
+        else # if the condition is not the same
+            tracknum = 1 # start from 1
+        end # assign appropriate track number
     
         append!(existingdf, DataFrame(
             id = fill(id, length(x)),
             track = fill(tracknum, length(x)),
             xpos  = x,
             ypos  = y)
-        )
-    end # add x y coordinates positions of each track to existingdf
+        ) # add x y coordinates positions of each track to existingdf
+    end
     
     return existingdf
 end
@@ -61,7 +61,6 @@ data
 # CALCULATE SPEED/DISTANCE FROM POSITION
 
 function speed(df)
-
     df.speed = map(1:nrow(df)) do ri 
         if ri == 1 || df.id[ri] != df.id[ri-1] || df.track[ri] != df.track[ri-1] # if first row in dataframe or condition (id) or track
             return missing # don't calculate distance
