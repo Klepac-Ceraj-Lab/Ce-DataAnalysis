@@ -51,9 +51,9 @@ speed74 = speed("./22spring/test3a/data/Position/74Position.csv")
 
 
 
-# LOAD TRACKS
+# COMPILE DATAFRAME WITH ALL POSITIONS
 
-function load_tracks!(existingdf, file)
+function load_tracks!(existingdf, file, id)
     tracks = DataFrame(CSV.File(file, header=5)) # import CSV to DataFrame
 
     divby1(num) = num%1 == 0
@@ -66,37 +66,52 @@ function load_tracks!(existingdf, file)
     for tr in 1:ntracks
         x = collect(skipmissing(tracks[!, 2*tr-1]))
         y = collect(skipmissing(tracks[!, 2*tr]))
-        append!(existingdf, DataFrame(track = fill(tr, length(x)),
-                                  xpos  = x,
-                                  ypos  = y)
+        
+        if isempty(existingdf)
+            tracknum = 1
+        elseif id == last(existingdf.id)
+            tracknum = last(existingdf.track) + 1
+        else
+            tracknum = 1
+        end
+    
+        append!(existingdf, DataFrame(
+            id = fill(id, length(x)),
+            track = fill(tracknum, length(x)),
+            xpos  = x,
+            ypos  = y)
         )
-    end
+    end # add x y coordinates positions of each track to existingdf
     
     return existingdf
 end
 
-# load_tracks! test
-existingdf = DataFrame() # initiate empty DataFrame
 
-file = "./22spring/test3a/data/Position/75Position.csv"
-tracks = DataFrame(CSV.File(file, header=5)) # import CSV to DataFrame
+# function load_tracks(file)
+#     df = DataFrame(track=Int[], xpos=Float64[], ypos=Float64[])
 
-divby1(num) = num%1 == 0
-filter!(:Time => divby1, tracks) # filter df down to position measurements every sec
+#     load_tracks!(df, file)
+# end
 
-select!(tracks, Not([:Frame, :Time])) # delete Frame and Time columns 
+# function load_tracks(files::Vector{<:AbstractString})
+#     longdf = load_tracks(first(files))
+#     length(files) == 1 && return longdf
+#     for file in files[2:end]
+#         load_tracks!(longdf, file)
+#     end
+#     return longdf
+# end
 
-ntracks = ncol(tracks) ÷ 2 # count every pair of columns (this is integer division, so the answer stays Int)
-
-for tr in 1:ntracks
-    x = collect(skipmissing(tracks[!, 2*tr-1]))
-    y = collect(skipmissing(tracks[!, 2*tr]))
-    append!(existingdf, DataFrame(track = fill(tr, length(x)),
-                              xpos  = x,
-                              ypos  = y)
-    )
-end
-
-data = DataFrame()
+data = DataFrame(id=String[], track=Int[], xpos=Float64[], ypos=Float64[])
 file = "./22spring/test3a/data/Position/75Position.csv"
 load_tracks!(data, file)
+load_tracks(file)
+
+files = ["./22spring/test3a/data/Position/75Position.csv", 
+        "./22spring/test3a/data/Position/74Position.csv"]
+
+load_tracks(files)
+
+data = DataFrame(id=String[], track=Int[], xpos=Float64[], ypos=Float64[])
+load_tracks!(data, "./22spring/test3a/data/Position/74Position.csv", "DA_N2_OP50")
+load_tracks!(data, "./22spring/test3a/data/Position/75Position.csv", "DA_N2_OP50")
