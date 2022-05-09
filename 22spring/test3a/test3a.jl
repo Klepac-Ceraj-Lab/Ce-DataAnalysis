@@ -12,9 +12,8 @@ using Distances
 function load_tracks!(existingdf, file, id)
     tracks = DataFrame(CSV.File(file, header=5)) # import CSV to DataFrame
 
-    divby1(num) = num%1 == 0
-    filter!(:Time => divby1, tracks) # filter df down to position measurements every sec
-    
+    filter!(:Time=> (num-> num % 1 == 0), tracks) # filter df down to position measurements every sec
+
     select!(tracks, Not([:Frame, :Time])) # delete Frame and Time columns 
     
     ntracks = ncol(tracks) ÷ 2 # count every pair of columns (this is integer division, so the answer stays Int)
