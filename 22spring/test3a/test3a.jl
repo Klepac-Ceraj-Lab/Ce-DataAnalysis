@@ -69,7 +69,7 @@ function speed(df)
         end
     end # add column to df with distances --> since distance is being measured across 1sec, distance = speed
 
-    dropmissing!(df)
+    dropmissing!(df) # delete rows with 'missing' speeds
 
     return df
 end
