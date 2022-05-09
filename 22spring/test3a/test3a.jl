@@ -51,16 +51,52 @@ speed74 = speed("./22spring/test3a/data/Position/74Position.csv")
 
 
 
-speed75 = speed("./22spring/test3a/data/Position/75Position.csv")
-# function does not work properly, only outputs 5 tracks and 58 rows. should be 6 tracks and many more rows
+# LOAD TRACKS
 
-df = DataFrame(CSV.File("./22spring/test3a/data/Position/75Position.csv", header=5))
+function load_tracks!(existingdf, file)
+    tracks = DataFrame(CSV.File(file, header=5)) # import CSV to DataFrame
+
+    divby1(num) = num%1 == 0
+    filter!(:Time => divby1, tracks) # filter df down to position measurements every sec
+    
+    select!(tracks, Not([:Frame, :Time])) # delete Frame and Time columns 
+    
+    ntracks = ncol(tracks) ÷ 2 # count every pair of columns (this is integer division, so the answer stays Int)
+    
+    for tr in 1:ntracks
+        x = collect(skipmissing(tracks[!, 2*tr-1]))
+        y = collect(skipmissing(tracks[!, 2*tr]))
+        append!(existingdf, DataFrame(track = fill(tr, length(x)),
+                                  xpos  = x,
+                                  ypos  = y)
+        )
+    end
+    
+    return existingdf
+end
+
+# load_tracks! test
+existingdf = DataFrame() # initiate empty DataFrame
+
+file = "./22spring/test3a/data/Position/75Position.csv"
+tracks = DataFrame(CSV.File(file, header=5)) # import CSV to DataFrame
+
 divby1(num) = num%1 == 0
-filter!(:Time => divby1, df) # filter df down to position measurements every sec
-select!(df, Not([:Frame, :Time]))
-# this code all works
+filter!(:Time => divby1, tracks) # filter df down to position measurements every sec
 
-df.track = map(eachrow(df)) do row
-    ceil(Int, findfirst(!ismissing, values(row)) / 2)
-end # add column to df with track numbers
-# this does not work for 75
+select!(tracks, Not([:Frame, :Time])) # delete Frame and Time columns 
+
+ntracks = ncol(tracks) ÷ 2 # count every pair of columns (this is integer division, so the answer stays Int)
+
+for tr in 1:ntracks
+    x = collect(skipmissing(tracks[!, 2*tr-1]))
+    y = collect(skipmissing(tracks[!, 2*tr]))
+    append!(existingdf, DataFrame(track = fill(tr, length(x)),
+                              xpos  = x,
+                              ypos  = y)
+    )
+end
+
+data = DataFrame()
+file = "./22spring/test3a/data/Position/75Position.csv"
+load_tracks!(data, file)
