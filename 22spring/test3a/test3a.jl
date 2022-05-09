@@ -87,29 +87,15 @@ function load_tracks!(existingdf, file, id)
 end
 
 
-# function load_tracks(file)
-#     df = DataFrame(track=Int[], xpos=Float64[], ypos=Float64[])
-
-#     load_tracks!(df, file)
-# end
-
-# function load_tracks(files::Vector{<:AbstractString})
-#     longdf = load_tracks(first(files))
-#     length(files) == 1 && return longdf
-#     for file in files[2:end]
-#         load_tracks!(longdf, file)
-#     end
-#     return longdf
-# end
 
 data = DataFrame(id=String[], track=Int[], xpos=Float64[], ypos=Float64[])
 
-load_tracks!(data, "./22spring/test3a/data/Position/74Position.csv", "DA_N2_OP50")
-load_tracks!(data, "./22spring/test3a/data/Position/75Position.csv", "DA_N2_OP50")
-load_tracks!(data, "./22spring/test3a/data/Position/76Position.csv", "DA_N2_OP50")
-load_tracks!(data, "./22spring/test3a/data/Position/77Position.csv", "DA_N2_OP50")
+for f in 74:77
+    load_tracks!(data, joinpath("./22spring/test3a/data/Position/", string(f, "Position.csv")), "DA_N2_OP50")
+end
 
-load_tracks!(data, "./22spring/test3a/data/Position/78Position.csv", "DA_N2_NGM")
-load_tracks!(data, "./22spring/test3a/data/Position/79Position.csv", "DA_N2_NGM")
-load_tracks!(data, "./22spring/test3a/data/Position/80Position.csv", "DA_N2_NGM")
-load_tracks!(data, "./22spring/test3a/data/Position/81Position.csv", "DA_N2_NGM")
+for f in 78:81
+    load_tracks!(data, joinpath("./22spring/test3a/data/Position/", string(f, "Position.csv")), "DA_N2_NGM")
+end
+
+data
