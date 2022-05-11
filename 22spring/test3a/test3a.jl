@@ -53,8 +53,6 @@ for f in 78:81
     load_tracks!(data, joinpath("./22spring/test3a/data/Position/", string(f, "Position.csv")), "DA_N2_NGM")
 end
 
-data
-
 
 
 # CALCULATE SPEED/DISTANCE FROM POSITION
@@ -74,8 +72,6 @@ function speed(df)
 end
 
 speed(data)
-
-data.track = abs.(data.track)
 
 select!(data, [:id, :track, :speed]) # filter out :xpos and :ypos columns
 
@@ -130,4 +126,61 @@ ax = Axis(
 )
 
 boxplot!(levelcode.(data.bacteria), data.speed, dodge = levelcode.(data.worm))
+
+
+
+# AVERAGE EVERY 5 SPEED MEASUREMENTS
+
+averagespeeds = DataFrame(id=String[], track=Int[], speed=Float64[])
+
+for row in 5:5:nrow(data)
+    if data.id[row] == data.id[row-4] && data.track[row] == data.track[row-4]
+        averagespeed = mean([data.speed[row-4], data.speed[row-3], data.speed[row-2], data.speed[row-1], data.speed[row]])
+        append!(averagespeeds, DataFrame(id = data.id[row], track = data.track[row], speed = averagespeed))
+    end
+end
+
+
+# individual track stats
+tracks = groupby(averagespeeds, [:id, :track])
+trackstats = combine(tracks, :speed => mean => :meanspeed, :speed => std => :stdspeed)
+
+# condition stats from individual stats 
+conditions = groupby(trackstats, [:id])
+conditionstats = combine(conditions, :meanspeed => mean => :meanofmeanspeed, :meanspeed => std => :stdofmeanspeed, :stdspeed => mean => :meanofstdspeed, :stdspeed => std => :stdofstdspeed)
+
+# condition stats from all data
+all = groupby(data, [:id])
+allstats = combine(all, :speed => mean => :meanspeed, :speed => std => :stdspeed)
+
+
+averagespeeds.medium = categorical(map(i-> split(i, '_')[1], averagespeeds.id))
+averagespeeds.worm = categorical(map(i-> split(i, '_')[2], averagespeeds.id))
+averagespeeds.bacteria = categorical(map(i-> split(i, '_')[3], averagespeeds.id))
+averagespeeds.id = categorical(averagespeeds.id, levels=["DA_N2_OP50", "DA_N2_NGM"])
+
+
+# violin
+fig = Figure(
+)
+
+ax = Axis(
+    fig[1,1],
+    xlabel = "Conditions",
+    ylabel = "Average Speed (um/s)",
+)
+
+violin!(levelcode.(averagespeeds.bacteria), averagespeeds.speed, dodge = levelcode.(averagespeeds.worm))
+
+# boxplot
+fig = Figure(
+)
+
+ax = Axis(
+    fig[1,1],
+    xlabel = "Conditions",
+    ylabel = "Average Speed (um/s)",
+)
+
+boxplot!(levelcode.(averagespeeds.bacteria), averagespeeds.speed, dodge = levelcode.(averagespeeds.worm))
 
