@@ -51,7 +51,7 @@ for f in 70:73
     extractdata!(data, joinpath("./22spring/test2/data/", string(f, "Speed.csv")), "M9_CB")
 end
 
-datransform!(data, :speed => ByRow(log) => :logspeed) # add column in data that is log of speed
+transform!(data, :speed => ByRow(log) => :logspeed) # add column in data that is log of speed
 
 
 

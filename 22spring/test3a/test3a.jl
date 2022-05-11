@@ -74,3 +74,60 @@ function speed(df)
 end
 
 speed(data)
+
+data.track = abs.(data.track)
+
+select!(data, [:id, :track, :speed]) # filter out :xpos and :ypos columns
+
+
+
+# SUMMARY STATS
+
+# individual track stats
+tracks = groupby(data, [:id, :track])
+trackstats = combine(tracks, :speed => mean => :meanspeed, :speed => std => :stdspeed)
+
+# condition stats from individual stats 
+conditions = groupby(trackstats, [:id])
+conditionstats = combine(conditions, :meanspeed => mean => :meanofmeanspeed, :meanspeed => std => :stdofmeanspeed, :stdspeed => mean => :meanofstdspeed, :stdspeed => std => :stdofstdspeed)
+
+# condition stats from all data
+all = groupby(data, [:id])
+allstats = combine(all, :speed => mean => :meanspeed, :speed => std => :stdspeed)
+
+
+
+# MAKE CATEGORICAL ARRAYS FOR PLOTTING
+data.medium = categorical(map(i-> split(i, '_')[1], data.id))
+data.worm = categorical(map(i-> split(i, '_')[2], data.id))
+data.bacteria = categorical(map(i-> split(i, '_')[3], data.id))
+data.id = categorical(data.id, levels=["DA_N2_OP50", "DA_N2_NGM"])
+
+
+
+# PLOTS
+
+# violin
+fig = Figure(
+)
+
+ax = Axis(
+    fig[1,1],
+    xlabel = "Conditions",
+    ylabel = "Average Speed (um/s)",
+)
+
+violin!(levelcode.(data.bacteria), data.speed, dodge = levelcode.(data.worm))
+
+# boxplot
+fig = Figure(
+)
+
+ax = Axis(
+    fig[1,1],
+    xlabel = "Conditions",
+    ylabel = "Average Speed (um/s)",
+)
+
+boxplot!(levelcode.(data.bacteria), data.speed, dodge = levelcode.(data.worm))
+
