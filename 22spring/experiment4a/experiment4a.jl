@@ -176,3 +176,19 @@ speeds.id = categorical(speeds.id, levels=[ "DA_N2_OP50", "DA_N2_NGM",
                                             "M9_N2_OP50", "M9_N2_NGM",
                                             "M9_CB_OP50", "M9_CB_NGM",
                                             "M9_MT_OP50", "M9_MT_NGM"])
+
+
+
+# PLOT
+
+fig = Figure(
+)
+
+ax = Axis(
+    fig[1,1],
+    xlabel = "Conditions",
+    ylabel = "Average Speed (um/s)",
+)
+
+# boxplot!(levelcode.(speeds.bacteria), speeds.speed, dodge = levelcode.(speeds.worm))
+# boxplot!(levelcode(speeds.id), speeds.speed)
