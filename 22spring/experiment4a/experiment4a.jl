@@ -131,21 +131,29 @@ end
 
 
 # AVERAGE EVERY 5 SPEED/SEC MEASUREMENTS
-averagespeeds = DataFrame(id=String[], track=Int[], speed=Float64[])
+speedperfive = DataFrame(id=String[], track=Int[], speed=Float64[])
 
 for row in 5:5:nrow(speedpersec)
     if speedpersec.id[row] == speedpersec.id[row-4] && speedpersec.track[row] == speedpersec.track[row-4]
-        averagespeed = mean([speedpersec.speed[row-4], speedpersec.speed[row-3], speedpersec.speed[row-2], speedpersec.speed[row-1], speedpersec.speed[row]])
-        append!(averagespeeds, DataFrame(id = speedpersec.id[row], track = speedpersec.track[row], speed = averagespeed))
+        meanspeed = mean([speedpersec.speed[row-4], speedpersec.speed[row-3], speedpersec.speed[row-2], speedpersec.speed[row-1], speedpersec.speed[row]])
+        append!(speedperfive, DataFrame(id = speedpersec.id[row], track = speedpersec.track[row], speed = meanspeed))
     end
 end
+
+
+
+# SAVE FINAL DATAFRAME
+CSV.write("./22spring/experiment4a/speeds.csv", speedperfive)
+
+# LOAD SPEEDS CSV INTO DATAFRAME
+speeds = DataFrame(CSV.File("./22spring/experiment4a/speeds.csv"))
 
 
 
 # STATS
 
 # individual track stats
-tracks = groupby(averagespeeds, [:id, :track])
+tracks = groupby(speeds, [:id, :track])
 trackstats = combine(tracks, :speed => mean => :meanspeed, :speed => std => :stdspeed)
 
 # condition stats from individual stats 
@@ -159,12 +167,12 @@ allstats = combine(all, :speed => mean => :meanspeed, :speed => std => :stdspeed
 
 
 # MAKE CATEGORICAL ARRAYS FOR PLOTTING
-averagespeeds.medium = categorical(map(i-> split(i, '_')[1], averagespeeds.id))
-averagespeeds.worm = categorical(map(i-> split(i, '_')[2], averagespeeds.id))
-averagespeeds.bacteria = categorical(map(i-> split(i, '_')[3], averagespeeds.id))
-averagespeeds.id = categorical(averagespeeds.id, levels=[ "DA_N2_OP50", "DA_N2_NGM",
-                                                        "DA_CB_OP50", "DA_CB_NGM",
-                                                        "DA_MT_OP50", "DA_MT_NGM",
-                                                        "M9_N2_OP50", "M9_N2_NGM",
-                                                        "M9_CB_OP50", "M9_CB_NGM",
-                                                        "M9_MT_OP50", "M9_MT_NGM"])
+speeds.medium = categorical(map(i-> split(i, '_')[1], speeds.id))
+speeds.worm = categorical(map(i-> split(i, '_')[2], speeds.id))
+speeds.bacteria = categorical(map(i-> split(i, '_')[3], speeds.id))
+speeds.id = categorical(speeds.id, levels=[ "DA_N2_OP50", "DA_N2_NGM",
+                                            "DA_CB_OP50", "DA_CB_NGM",
+                                            "DA_MT_OP50", "DA_MT_NGM",
+                                            "M9_N2_OP50", "M9_N2_NGM",
+                                            "M9_CB_OP50", "M9_CB_NGM",
+                                            "M9_MT_OP50", "M9_MT_NGM"])
