@@ -192,5 +192,3 @@ ax = Axis(
 
 # boxplot!(levelcode.(speeds.bacteria), speeds.speed, dodge = levelcode.(speeds.worm))
 # boxplot!(levelcode(speeds.id), speeds.speed)
-
-test
