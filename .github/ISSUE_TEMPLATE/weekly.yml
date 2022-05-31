@@ -1,0 +1,48 @@
+name: Weekly meetings
+description: Agenda for weekly meetings with Kevin
+title: "Weekly meeting for YYYY-MM-DD"
+labels: ["Weekly meeting"]
+assignees:
+  - kescobo
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please fill out these forms as best you can
+  - type: textarea
+    id: last-week
+    attributes:
+      label: What I accomplished last week
+      description: Link to relevant issues where appropriate
+      placeholder: Tell us what you did!
+      value: |
+        - [x] Thing1
+        - [x] Thing2
+    validations:
+      required: true
+  - type: textarea
+    id: next-week
+    attributes:
+      label: What I plan to do next week
+      description: If something bares tracking long-term, open issues or add tasks to project
+      placeholder: Tell us what you will do!
+      value: |
+        - [ ] Thing1
+        - [ ] Thing2
+    validations:
+      required: true
+  - type: textarea
+    id: struggles
+    attributes:
+      label: Is there anything that Kevin can help with
+      description: If something bares tracking long-term, open issues or add tasks to project
+  - type: checkboxes
+    id: accomplishments
+    attributes:
+      label: How did the last week go?
+      description: Check things that apply
+      options:
+        - label: I accomplished all or most of my goals
+        - label: I used my time wisely
+        - label: I struggled with a problem, but solved it
+        - label: I ran into an issue I can't solve on my own
