@@ -1,3 +1,6 @@
+name = "CeDataAnalysis"
+uuid = "7ed900c7-2c13-4df8-b3b6-63e4be26cab7"
+
 [deps]
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
 CategoricalArrays = "324d7699-5711-5eae-9e2f-1d82baa6b597"
