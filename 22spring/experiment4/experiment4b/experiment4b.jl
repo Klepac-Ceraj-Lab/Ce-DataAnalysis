@@ -1,13 +1,9 @@
-using CSV
-using DataFrames
-using CategoricalArrays
-using GLMakie
-using Statistics
-using Distances
-
 using CeDataAnalysis
 using DataFrames
 using CSV
+# using CategoricalArrays
+# using GLMakie
+
 
 
 # COMPILE DATAFRAME WITH 5 POSITION MEASUREMENTS EVERY SEC
@@ -84,6 +80,7 @@ speeds = DataFrame(CSV.File("./22spring/experiment4/experiment4b/speeds.csv"))
 # SUMMARY STATS
 conditionstats(speeds)
 allstats(speeds)
+
 
 
 # MAKE CATEGORICAL ARRAYS FOR PLOTTING
