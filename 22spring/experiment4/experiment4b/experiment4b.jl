@@ -26,13 +26,18 @@ files.id = ids
 
 
 
-# COMPILE DATAFRAME WITH 5 POSITION MEASUREMENTS EVERY SEC
-datafolder = "./22spring/experiment4/experiment4b/data/Position/"
+# DEFINE EXPERIMENT DIRECTORY
+experimentdir = "./22spring/experiment4/experiment4b/"
 
+
+
+# COMPILE DATAFRAME WITH 5 POSITION MEASUREMENTS EVERY SEC
 data = DataFrame(id=String[], track=Int[], xpos=Float64[], ypos=Float64[])
 
+positionsdir = joinpath(experimentdir, "data/Position")
+
 for row in 1:nrow(files)
-    load_tracks!(data, joinpath(datafolder, string(files.num[row], "Position.csv")), files.id[row])
+    load_tracks!(data, joinpath(positionsdir, string(files.num[row], "Position.csv")), files.id[row])
 end
 
 
@@ -46,10 +51,12 @@ speedperfive = averageoverfive(data)
 
 
 # SAVE FINAL DATAFRAME
-CSV.write("./22spring/experiment4/experiment4b/speeds.csv", speedperfive)
+speedscsv = joinpath(experimentdir, "speeds.csv")
+
+CSV.write(speedscsv, speedperfive)
 
 # LOAD SPEEDS CSV INTO DATAFRAME
-speeds = DataFrame(CSV.File("./22spring/experiment4/experiment4b/speeds.csv"))
+speeds = DataFrame(CSV.File(speedscsv))
 
 
 
