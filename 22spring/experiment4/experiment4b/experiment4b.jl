@@ -6,57 +6,33 @@ using CSV
 
 
 
-# COMPILE DATAFRAME WITH 5 POSITION MEASUREMENTS EVERY SEC
-data = DataFrame(id=String[], track=Int[], xpos=Float64[], ypos=Float64[])
+# CREATE DATAFRAMES OF FILE NUMBERS AND IDS
+files = DataFrame()
+files.num = 131:179
+ids = Vector{String}()
+append!(ids, fill("DA_N2_OP50", length(131:136)))
+append!(ids, fill("DA_N2_NGM", length(137:142)))
+append!(ids, fill("DA_CB_OP50", length(143:147)))
+append!(ids, fill("DA_CB_NGM", length(148:152)))
+append!(ids, fill("DA_MT_OP50", length(153:156)))
+append!(ids, fill("DA_MT_NGM", length(157:160)))
+append!(ids, fill("M9_N2_OP50", length(161:163)))
+append!(ids, fill("M9_N2_NGM", length(164:166)))
+append!(ids, fill("M9_CB_OP50", length(167:168)))
+append!(ids, fill("M9_CB_NGM", length(169:171)))
+append!(ids, fill("M9_MT_OP50", length(172:175)))
+append!(ids, fill("M9_MT_NGM", length(176:179)))
+files.id = ids
 
+
+
+# COMPILE DATAFRAME WITH 5 POSITION MEASUREMENTS EVERY SEC
 datafolder = "./22spring/experiment4/experiment4b/data/Position/"
 
-for f in 131:136
-    load_tracks!(data, joinpath(datafolder, string(f, "Position.csv")), "DA_N2_OP50")
-end
+data = DataFrame(id=String[], track=Int[], xpos=Float64[], ypos=Float64[])
 
-for f in 137:142
-    load_tracks!(data, joinpath(datafolder, string(f, "Position.csv")), "DA_N2_NGM")
-end
-
-for f in 143:147
-    load_tracks!(data, joinpath(datafolder, string(f, "Position.csv")), "DA_CB_OP50")
-end
-
-for f in 148:152
-    load_tracks!(data, joinpath(datafolder, string(f, "Position.csv")), "DA_CB_NGM")
-end
-
-for f in 153:156
-    load_tracks!(data, joinpath(datafolder, string(f, "Position.csv")), "DA_MT_OP50")
-end
-
-for f in 157:160
-    load_tracks!(data, joinpath(datafolder, string(f, "Position.csv")), "DA_MT_NGM")
-end
-
-for f in 161:163
-    load_tracks!(data, joinpath(datafolder, string(f, "Position.csv")), "M9_N2_OP50")
-end
-
-for f in 164:166
-    load_tracks!(data, joinpath(datafolder, string(f, "Position.csv")), "M9_N2_NGM")
-end
-
-for f in 167:168
-    load_tracks!(data, joinpath(datafolder, string(f, "Position.csv")), "M9_CB_OP50")
-end
-
-for f in 169:171
-    load_tracks!(data, joinpath(datafolder, string(f, "Position.csv")), "M9_CB_NGM")
-end
-
-for f in 172:175
-    load_tracks!(data, joinpath(datafolder, string(f, "Position.csv")), "M9_MT_OP50")
-end
-
-for f in 175:179
-    load_tracks!(data, joinpath(datafolder, string(f, "Position.csv")), "M9_MT_NGM")
+for row in 1:nrow(files)
+    load_tracks!(data, joinpath(datafolder, string(files.num[row], "Position.csv")), files.id[row])
 end
 
 
