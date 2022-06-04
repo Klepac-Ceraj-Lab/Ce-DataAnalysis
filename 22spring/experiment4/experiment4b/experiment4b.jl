@@ -9,19 +9,6 @@ using CSV
 # CREATE DATAFRAME OF FILE NUMBERS AND IDS
 files = DataFrame()
 files.num = 131:179
-ids = Vector{String}()
-append!(ids, fill("DA_N2_OP50", length(131:136)))
-append!(ids, fill("DA_N2_NGM", length(137:142)))
-append!(ids, fill("DA_CB_OP50", length(143:147)))
-append!(ids, fill("DA_CB_NGM", length(148:152)))
-append!(ids, fill("DA_MT_OP50", length(153:156)))
-append!(ids, fill("DA_MT_NGM", length(157:160)))
-append!(ids, fill("M9_N2_OP50", length(161:163)))
-append!(ids, fill("M9_N2_NGM", length(164:166)))
-append!(ids, fill("M9_CB_OP50", length(167:168)))
-append!(ids, fill("M9_CB_NGM", length(169:171)))
-append!(ids, fill("M9_MT_OP50", length(172:175)))
-append!(ids, fill("M9_MT_NGM", length(176:179)))
 files.id = [
     fill("DA_N2_OP50", length(131:136));
     fill("DA_N2_NGM", length(137:142));
@@ -51,7 +38,6 @@ positionsdir = joinpath(experimentdir, "data/Position")
 
 for row in eachrow(files)
     load_tracks!(data, joinpath(positionsdir, string(row.num, "Position.csv")), row.id)
-    load_tracks!(data, joinpath(positionsdir, string(files.num[row], "Position.csv")), files.id[row])
 end
 
 
