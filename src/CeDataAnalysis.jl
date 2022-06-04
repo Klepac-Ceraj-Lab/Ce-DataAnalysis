@@ -18,9 +18,9 @@ using Distances
 
 # TAKE 5 POSITION MEASUREMENTS EVERY SEC
 function load_tracks!(existingdf, file, id)
-    tracks = DataFrame(CSV.File(file, header=5)) # import CSV to DataFrame
+    tracks = CSV.read(file, DataFrame; header=5) # import CSV to DataFrame
 
-    filter!(:Frame=> (num-> num % 5 == 0), tracks) # filter df down to 5 position measurements every sec
+    subset!(tracks, :Frame=> ByRow(num-> num % 5 == 0)) # filter df down to 5 position measurements every sec
 
     select!(tracks, Not([:Frame, :Time])) # delete Frame and Time columns 
     

@@ -22,7 +22,20 @@ append!(ids, fill("M9_CB_OP50", length(167:168)))
 append!(ids, fill("M9_CB_NGM", length(169:171)))
 append!(ids, fill("M9_MT_OP50", length(172:175)))
 append!(ids, fill("M9_MT_NGM", length(176:179)))
-files.id = ids
+files.id = [
+    fill("DA_N2_OP50", length(131:136));
+    fill("DA_N2_NGM", length(137:142));
+    fill("DA_CB_OP50", length(143:147));
+    fill("DA_CB_NGM", length(148:152));
+    fill("DA_MT_OP50", length(153:156));
+    fill("DA_MT_NGM", length(157:160));
+    fill("M9_N2_OP50", length(161:163));
+    fill("M9_N2_NGM", length(164:166));
+    fill("M9_CB_OP50", length(167:168));
+    fill("M9_CB_NGM", length(169:171));
+    fill("M9_MT_OP50", length(172:175));
+    fill("M9_MT_NGM", length(176:179))
+]
 
 
 
@@ -36,7 +49,8 @@ data = DataFrame(id=String[], track=Int[], xpos=Float64[], ypos=Float64[])
 
 positionsdir = joinpath(experimentdir, "data/Position")
 
-for row in 1:nrow(files)
+for row in eachrow(files)
+    load_tracks!(data, joinpath(positionsdir, string(row.num, "Position.csv")), row.id)
     load_tracks!(data, joinpath(positionsdir, string(files.num[row], "Position.csv")), files.id[row])
 end
 
