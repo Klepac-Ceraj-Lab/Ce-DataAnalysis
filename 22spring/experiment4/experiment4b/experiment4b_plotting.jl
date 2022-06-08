@@ -25,6 +25,15 @@ speeds.id = categorical(speeds.id, levels=[ "DA_N2_OP50", "DA_N2_NGM",
 
 
 
+# separate speeds into two different dfs based on medium
+bufferspeeds = filter(:medium => m -> m == "M9", speeds)
+dopaminespeeds = filter(:medium => m -> m == "DA", speeds)
+
+
+
+# PLOT
+
+# all 12 conditions evenly spaced in one plot
 fig1 = Figure(
 )
 
@@ -34,3 +43,45 @@ ax1 = Axis(
 )
 
 boxplot!(levelcode.(speeds.id), speeds.speed)
+
+save(joinpath(experimentdir, "fig1.png"), fig1)
+
+# two plots in one figure: plots = medium, xaxis = worm, grouping = bacteria
+fig2 = Figure(
+)
+
+ax2a = Axis(
+    fig2[1,1],
+    title = "M9",
+    xlabel = "C. elegans Strain",
+    xticks = (1:3, levels(bufferspeeds.worm)),
+    ylabel = "Average Speed (<unit>)",
+)
+
+ylims!(0,25000)
+dodge = levelcode.(bufferspeeds.bacteria)
+
+boxplot!(ax2a, levelcode.(bufferspeeds.worm), bufferspeeds.speed, dodge = dodge, color = dodge)
+
+ax2b = Axis(
+    fig2[1,2],
+    title = "DA",
+    xlabel = "C. elegans Strain",
+    xticks = (1:3, levels(dopaminespeeds.worm)),
+    ylabel = "Average Speed (<unit>)",
+)
+
+ylims!(0,25000)
+dodge = levelcode.(dopaminespeeds.bacteria)
+
+boxplot!(ax2b, levelcode.(dopaminespeeds.worm), dopaminespeeds.speed, dodge = dodge, color = dodge)
+
+hideydecorations!(ax2b, grid = false)
+
+# labels = levels(speeds.bacteria)
+# elements = [PolyElement(polycolor = levelcode.(speeds.bacteria[i])) for i in 1:length(labels)]
+# title = "Bacteria Presence"
+
+# Legend(fig2[1,3], elements, labels, title)
+
+save(joinpath(experimentdir, "fig2.png"), fig2)
