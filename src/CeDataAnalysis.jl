@@ -2,6 +2,7 @@ module CeDataAnalysis
 
 # "export" functions / variables that should be accessible when you do `using CeDataAnalysis`
 export  load_tracks!,
+        distance,
         speed,
         averageoverfive,
         conditionstats,
@@ -51,19 +52,31 @@ end
 
 
 
-# CALCULATE SPEED/DISTANCE FROM POSITION
-function speed(df)
-    df.speed = map(1:nrow(df)) do ri 
+# CALCULATE DISTANCE FROM POSITION (µm/0.2sec)
+function distance(df)
+    df.distance = map(1:nrow(df)) do ri 
         if ri == 1 || df.id[ri] != df.id[ri-1] || df.track[ri] != df.track[ri-1] # if first row in dataframe or condition (id) or track
             return missing # don't calculate distance
         else # calculate distance between point in row to point in previous row
             return euclidean([df.xpos[ri-1], df.xpos[ri]], [df.ypos[ri-1], df.ypos[ri]]) 
         end
-    end # add column to df with distances --> since distance is being measured across 1sec, distance = speed
+    end # add column to df with distances
 
-    dropmissing!(df) # delete rows with 'missing' speeds
+    dropmissing!(df) # delete rows with 'missing' distances
 
-    select!(df, [:id, :track, :speed]) # filter out :xpos and :ypos columns
+    select!(df, [:id, :track, :distance]) # filter out :xpos and :ypos columns
+
+    return df
+end
+
+
+
+# CALCULATE SPEED FROM DISTANCE
+# since distance is being measured across 0.2sec, speed in µm/sec = distance(µm) / 0.2sec
+function speed(df)
+    df.speed = map(1:nrow(df)) do ri 
+        return df.distance[ri] / 0.2
+    end # add column to df with speeds
 
     return df
 end
