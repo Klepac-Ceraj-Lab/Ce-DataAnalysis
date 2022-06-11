@@ -64,7 +64,7 @@ ax2a = Axis(
 ylims!(0,25000)
 dodge = levelcode.(bufferspeeds.bacteria)
 
-boxplot!(ax2a, levelcode.(bufferspeeds.worm), bufferspeeds.speed, dodge = dodge, color = dodge)
+boxplot!(ax2a, levelcode.(bufferspeeds.worm), bufferspeeds.speed, dodge = dodge, color = map(d->d==1 ? :blue : :red, dodge))
 
 ax2b = Axis(
     fig2[1,2],
@@ -77,7 +77,7 @@ ax2b = Axis(
 ylims!(0,25000)
 dodge = levelcode.(dopaminespeeds.bacteria)
 
-boxplot!(ax2b, levelcode.(dopaminespeeds.worm), dopaminespeeds.speed, dodge = dodge, color = dodge)
+boxplot!(ax2b, levelcode.(dopaminespeeds.worm), dopaminespeeds.speed, dodge = dodge, color = map(d->d==1 ? :blue : :red, dodge))
 
 hideydecorations!(ax2b, grid = false)
 
