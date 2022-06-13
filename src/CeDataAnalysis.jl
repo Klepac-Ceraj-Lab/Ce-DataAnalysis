@@ -73,9 +73,9 @@ end
 
 # CALCULATE SPEED FROM DISTANCE
 # since distance is being measured across 0.2sec, speed in µm/sec = distance(µm) / 0.2sec
-function speed(df)
+function speed(df; duration=0.2)
     df.speed = map(1:nrow(df)) do ri 
-        return df.distance[ri] / 0.2
+        return df.distance[ri] / duration
     end # add column to df with speeds
 
     return df
