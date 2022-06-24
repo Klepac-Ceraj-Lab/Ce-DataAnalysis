@@ -40,8 +40,11 @@ end
 
 
 
-# CALCULATE SPEED/DISTANCE FROM POSITION
-speed(data) # calculate speed from position
+# CALCULATE DISTANCE FROM POSITION (µm/0.2sec)
+distance(data)
+
+# CALCULATE SPEED FROM DISTANCE
+speed(data)
 
 # AVERAGE SPEED MEASUREMENTS ACROSS 5 SEC (AVERAGE OF 25 MEASUREMENTS)
 speedperfive = averageoverfive(data)
