@@ -25,7 +25,7 @@ files.id = [
 
 
 # DEFINE EXPERIMENT DIRECTORY
-experimentdir = "./22spring/experiment4/experiment4b/"
+experimentdir = "./dopamine/experiment4/experiment4b/"
 
 
 
