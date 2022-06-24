@@ -44,6 +44,8 @@ ax1 = Axis(
     ylabel = "Average Speed (<unit>)",
 )
 
+ylims!(0,150000)
+
 boxplot!(levelcode.(speeds.id), speeds.speed)
 
 save(joinpath(experimentdir, "fig1.png"), fig1)
@@ -61,7 +63,7 @@ ax2a = Axis(
     ylabel = "Average speed (<unit>)",
 )
 
-ylims!(0,100000)
+ylims!(0,150000)
 dodge = levelcode.(bufferspeeds.bacteria)
 
 boxplot!(ax2a, levelcode.(bufferspeeds.worm), bufferspeeds.speed, dodge = dodge, color = map(d->d==1 ? :blue : :red, dodge))
@@ -74,7 +76,7 @@ ax2b = Axis(
     ylabel = "Average speed (<unit>)",
 )
 
-ylims!(0,100000)
+ylims!(0,150000)
 dodge = levelcode.(dopaminespeeds.bacteria)
 
 boxplot!(ax2b, levelcode.(dopaminespeeds.worm), dopaminespeeds.speed, dodge = dodge, color = map(d->d==1 ? :blue : :red, dodge))
