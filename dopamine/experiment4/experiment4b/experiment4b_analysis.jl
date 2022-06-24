@@ -61,6 +61,3 @@ allstats(speedperfive)
 speedscsv = joinpath(experimentdir, "speeds.csv")
 
 CSV.write(speedscsv, speedperfive)
-
-# LOAD SPEEDS CSV INTO DATAFRAME
-speeds = DataFrame(CSV.File(speedscsv))
