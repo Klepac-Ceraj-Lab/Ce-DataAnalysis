@@ -81,12 +81,21 @@ dodge = levelcode.(dopaminespeeds.bacteria)
 
 boxplot!(ax2b, levelcode.(dopaminespeeds.worm), dopaminespeeds.speed, dodge = dodge, color = map(d->d==1 ? :blue : :red, dodge))
 
+##
+
+using AlgebraOfGraphics
+
+data(dopaminespeeds) * mapping(:worm, :speed, dodge=:bacteria, color=:bacteria) *
+    visual(BoxPlot) |> draw
+
 hideydecorations!(ax2b, grid = false)
 
-# labels = levels(speeds.bacteria)
-# elements = [PolyElement(polycolor = levelcode.(speeds.bacteria[i])) for i in 1:length(labels)]
-# title = "Bacteria Presence"
+labels = levels(speeds.bacteria)
+elements = [MarkerElement(; color = levelcode.(speeds.bacteria[i]), marker = :square) for i in 1:length(labels)]
+title = "Bacteria Presence"
 
-# Legend(fig2[1,3], elements, labels, title)
+Legend(fig2[1,3], elements, labels, title)
 
 save(joinpath(experimentdir, "fig2.png"), fig2)
+
+fig2
