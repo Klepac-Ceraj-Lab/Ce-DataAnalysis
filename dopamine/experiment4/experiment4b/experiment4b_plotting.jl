@@ -83,10 +83,16 @@ boxplot!(ax2b, levelcode.(dopaminespeeds.worm), dopaminespeeds.speed, dodge = do
 
 hideydecorations!(ax2b, grid = false)
 
-# labels = levels(speeds.bacteria)
-# elements = [PolyElement(polycolor = levelcode.(speeds.bacteria[i])) for i in 1:length(labels)]
-# title = "Bacteria Presence"
 
-# Legend(fig2[1,3], elements, labels, title)
+elem_1 = [PolyElement(color = :blue)]
+elem_2 = [PolyElement(color = :red)]
+
+Legend(fig2[2, :],
+    [elem_1, elem_2],
+    ["NGM", "OP50"],
+    "Bacteria Presence",
+    orientation = :horizontal,
+    titleposition = :left)
+
 
 save(joinpath(experimentdir, "fig2.png"), fig2)
