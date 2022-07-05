@@ -89,7 +89,7 @@ elem_2 = [PolyElement(color = :red)]
 
 Legend(fig2[2, :],
     [elem_1, elem_2],
-    ["NGM", "OP50"],
+    ["No", "Yes"],
     "Bacteria Presence",
     orientation = :horizontal,
     titleposition = :left)
