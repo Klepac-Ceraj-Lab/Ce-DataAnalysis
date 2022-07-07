@@ -50,7 +50,7 @@ boxplot!(levelcode.(speeds.id), speeds.speed)
 
 save(joinpath(experimentdir, "fig1.png"), fig1)
 
-# two plots in one figure: plots = medium, xaxis = worm, grouping = bacteria
+# two boxplots in one figure: plots = medium, xaxis = worm, grouping = bacteria
 fig2 = Figure(
 )
 
@@ -96,3 +96,52 @@ Legend(fig2[2, :],
 
 
 save(joinpath(experimentdir, "fig2.png"), fig2)
+
+
+
+# two violin plots in one figure: plots = medium, xaxis = worm, grouping = bacteria
+fig3 = Figure(
+    )
+    
+ax3a = Axis(
+    fig3[1,1],
+    title = "M9",
+    xlabel = "C. elegans strain",
+    # xlabelfont = "TeX Gyre Heros Makie Italic",
+    xticks = (1:3, levels(bufferspeeds.worm)),
+    ylabel = "Average speed (<unit>)",
+)
+
+ylims!(-50000,150000)
+dodge = levelcode.(bufferspeeds.bacteria)
+
+violin!(ax3a, levelcode.(bufferspeeds.worm), bufferspeeds.speed, dodge = dodge, color = map(d->d==1 ? :blue : :red, dodge))
+
+ax3b = Axis(
+    fig3[1,2],
+    title = "DA",
+    xlabel = "C. elegans strain",
+    xticks = (1:3, levels(dopaminespeeds.worm)),
+    ylabel = "Average speed (<unit>)",
+)
+
+ylims!(-50000,150000)
+dodge = levelcode.(dopaminespeeds.bacteria)
+
+violin!(ax3b, levelcode.(dopaminespeeds.worm), dopaminespeeds.speed, dodge = dodge, color = map(d->d==1 ? :blue : :red, dodge))
+
+hideydecorations!(ax3b, grid = false)
+
+
+elem_1 = [PolyElement(color = :blue)]
+elem_2 = [PolyElement(color = :red)]
+
+Legend(fig3[2, :],
+    [elem_1, elem_2],
+    ["No", "Yes"],
+    "Bacteria Presence",
+    orientation = :horizontal,
+    titleposition = :left)
+
+
+save(joinpath(experimentdir, "fig3.png"), fig3)
