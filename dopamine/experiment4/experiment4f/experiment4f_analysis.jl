@@ -6,28 +6,26 @@ using CSV
 
 # CREATE DATAFRAME OF FILE NUMBERS AND IDS
 files = DataFrame()
-files.num = 181:230
+files.num = 233:284
 files.id = [
-    fill("DA_N2_OP50", length(181:183));
-    fill("DA_N2_NGM", length(184:188));
-    fill("DA_CB_OP50", length(189:192));
-    fill("DA_CB_NGM", length(193:195));
-    fill("DA_MT_OP50", length(196:198));
-    fill("DA_MT_NGM", length(199:202));
-    fill("M9_N2_OP50", length(203:206));
-    fill("M9_N2_NGM", length(207:211));
-    fill("M9_CB_OP50", length(212:215));
-    fill("M9_CB_NGM", length(216:218));
-    fill("M9_MT_OP50", length(219:224));
-    fill("M9_MT_NGM", length(225:230))
+    fill("DA_N2_OP50", length(233:237));
+    fill("DA_N2_NGM", length(238:240));
+    fill("DA_CB_OP50", length(241:243));
+    fill("DA_CB_NGM", length(244:248));
+    fill("DA_MT_OP50", length(249:254));
+    fill("DA_MT_NGM", length(255:257));
+    fill("M9_N2_OP50", length(258:261));
+    fill("M9_N2_NGM", length(262:265));
+    fill("M9_CB_OP50", length(266:269));
+    fill("M9_CB_NGM", length(270:273));
+    fill("M9_MT_OP50", length(274:278));
+    fill("M9_MT_NGM", length(279:284))
 ]
-
-deleteat!(files, 12) # did not get data from VID192 --> deleted row for that file
 
 
 
 # DEFINE EXPERIMENT DIRECTORY
-experimentdir = "./dopamine/experiment4/experiment4e/"
+experimentdir = "./dopamine/experiment4/experiment4f/"
 
 
 
