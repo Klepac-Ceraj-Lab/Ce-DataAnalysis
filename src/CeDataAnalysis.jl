@@ -58,7 +58,7 @@ function distance(df)
         if ri == 1 || df.id[ri] != df.id[ri-1] || df.track[ri] != df.track[ri-1] # if first row in dataframe or condition (id) or track
             return missing # don't calculate distance
         else # calculate distance between point in row to point in previous row
-            return euclidean([df.xpos[ri-1], df.xpos[ri]], [df.ypos[ri-1], df.ypos[ri]]) 
+            return euclidean((df.xpos[ri-1], df.ypos[ri-1]), (df.xpos[ri], df.ypos[ri]))
         end
     end # add column to df with distances
 
