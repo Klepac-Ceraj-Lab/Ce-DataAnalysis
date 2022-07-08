@@ -9,8 +9,9 @@ using GLMakie
 speedsb = DataFrame(CSV.File("./dopamine/experiment4/experiment4b/speeds.csv"))
 speedse = DataFrame(CSV.File("./dopamine/experiment4/experiment4e/speeds.csv"))
 speedsf = DataFrame(CSV.File("./dopamine/experiment4/experiment4f/speeds.csv"))
+speedsh = DataFrame(CSV.File("./dopamine/experiment4/experiment4h/speeds.csv"))
 
-speeds = vcat(speedsb, speedse, speedsf)
+speeds = vcat(speedsb, speedse, speedsf, speedsh)
 
 
 
