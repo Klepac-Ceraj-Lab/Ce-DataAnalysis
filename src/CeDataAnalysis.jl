@@ -64,7 +64,7 @@ function distance!(df)
 
     dropmissing!(df) # delete rows with 'missing' distances
 
-    select!(df, [:id, :track, :distance]) # filter out :xpos and :ypos columns
+    # select!(df, [:id, :track, :distance]) # filter out :xpos and :ypos columns
 
     return df
 end
