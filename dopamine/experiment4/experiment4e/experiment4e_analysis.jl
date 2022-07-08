@@ -27,14 +27,14 @@ deleteat!(files, 12) # did not get data from VID192 --> deleted row for that fil
 
 
 # DEFINE EXPERIMENT DIRECTORY
-experimentdir = "./dopamine/experiment4/experiment4e/"
+experimentdir = @__DIR__
 
 
 
 # COMPILE DATAFRAME WITH 5 POSITION MEASUREMENTS EVERY SEC
 data = DataFrame(id=String[], track=Int[], xpos=Float64[], ypos=Float64[])
 
-positionsdir = joinpath(experimentdir, "data/Position")
+positionsdir = joinpath(experimentdir, "data", "Position")
 
 for row in eachrow(files)
     load_tracks!(data, joinpath(positionsdir, string(row.num, "Position.csv")), row.id)

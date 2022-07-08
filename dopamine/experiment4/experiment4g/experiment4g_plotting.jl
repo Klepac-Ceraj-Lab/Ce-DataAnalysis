@@ -34,21 +34,21 @@ dopaminespeeds = filter(:medium => m -> m == "DA", speeds)
 # PLOT
 
 # all 12 conditions evenly spaced in one plot
-fig1 = Figure(
-)
+# fig1 = Figure(
+# )
 
-ax1 = Axis(
-    fig1[1,1],
-    xticks = (1:12, levels(speeds.id)),
-    xticklabelrotation = π/2,
-    ylabel = "Average Speed (<unit>)",
-)
+# ax1 = Axis(
+#     fig1[1,1],
+#     xticks = (1:12, levels(speeds.id)),
+#     xticklabelrotation = π/2,
+#     ylabel = "Average Speed (<unit>)",
+# )
 
-ylims!(0,150000)
+# ylims!(0,150000)
 
-boxplot!(levelcode.(speeds.id), speeds.speed)
+# boxplot!(levelcode.(speeds.id), speeds.speed)
 
-save(joinpath(experimentdir, "fig1.png"), fig1)
+# save(joinpath(experimentdir, "fig1.png"), fig1)
 
 # two boxplots in one figure: plots = medium, xaxis = worm, grouping = bacteria
 fig2 = Figure(
@@ -60,7 +60,7 @@ ax2a = Axis(
     xlabel = "C. elegans strain",
     # xlabelfont = "TeX Gyre Heros Makie Italic",
     xticks = (1:3, levels(bufferspeeds.worm)),
-    ylabel = "Average speed (<unit>)",
+    ylabel = "Average speed (µm/sec)",
 )
 
 ylims!(0,450)
@@ -73,7 +73,7 @@ ax2b = Axis(
     title = "DA",
     xlabel = "C. elegans strain",
     xticks = (1:3, levels(dopaminespeeds.worm)),
-    ylabel = "Average speed (<unit>)",
+    ylabel = "Average speed (µm/sec)",
 )
 
 ylims!(0,450)
@@ -109,7 +109,7 @@ ax3a = Axis(
     xlabel = "C. elegans strain",
     # xlabelfont = "TeX Gyre Heros Makie Italic",
     xticks = (1:3, levels(bufferspeeds.worm)),
-    ylabel = "Average speed (<unit>)",
+    ylabel = "Average speed (µm/sec)",
 )
 
 ylims!(-50,500)
@@ -122,7 +122,7 @@ ax3b = Axis(
     title = "DA",
     xlabel = "C. elegans strain",
     xticks = (1:3, levels(dopaminespeeds.worm)),
-    ylabel = "Average speed (<unit>)",
+    ylabel = "Average speed (µm/sec)",
 )
 
 ylims!(-50,500)
