@@ -6,6 +6,8 @@ using GLMakie
 
 
 # LOAD ALL SPEEDS CSVS AND COMBINE INTO ONE DATAFRAME
+experimentdir = @__DIR__
+
 speedsb = DataFrame(CSV.File("./dopamine/experiment4/experiment4b/speeds.csv"))
 speedse = DataFrame(CSV.File("./dopamine/experiment4/experiment4e/speeds.csv"))
 speedsf = DataFrame(CSV.File("./dopamine/experiment4/experiment4f/speeds.csv"))
@@ -51,7 +53,7 @@ dopaminespeeds = filter(:medium => m -> m == "DA", speeds)
 
 # boxplot!(levelcode.(speeds.id), speeds.speed)
 
-# save("./dopamine/experiment4/fig1.png", fig1)
+# save(joinpath(experimentdir, "fig1.png"), fig1)
 
 # two boxplots in one figure: plots = medium, xaxis = worm, grouping = bacteria
 fig2 = Figure(
@@ -63,10 +65,10 @@ ax2a = Axis(
     xlabel = "C. elegans strain",
     # xlabelfont = "TeX Gyre Heros Makie Italic",
     xticks = (1:3, levels(bufferspeeds.worm)),
-    ylabel = "Average speed (<unit>)",
+    ylabel = "Average speed (µm/sec)",
 )
 
-ylims!(0,150000)
+ylims!(0,450)
 dodge = levelcode.(bufferspeeds.bacteria)
 
 boxplot!(ax2a, levelcode.(bufferspeeds.worm), bufferspeeds.speed, dodge = dodge, color = map(d->d==1 ? :blue : :red, dodge))
@@ -76,10 +78,10 @@ ax2b = Axis(
     title = "DA",
     xlabel = "C. elegans strain",
     xticks = (1:3, levels(dopaminespeeds.worm)),
-    ylabel = "Average speed (<unit>)",
+    ylabel = "Average speed (µm/sec)",
 )
 
-ylims!(0,150000)
+ylims!(0,450)
 dodge = levelcode.(dopaminespeeds.bacteria)
 
 boxplot!(ax2b, levelcode.(dopaminespeeds.worm), dopaminespeeds.speed, dodge = dodge, color = map(d->d==1 ? :blue : :red, dodge))
@@ -98,7 +100,7 @@ Legend(fig2[2, :],
     titleposition = :left)
 
 
-save("./dopamine/experiment4/fig2.png", fig2)
+save(joinpath(experimentdir, "fig2.png"), fig2)
 
 
 
@@ -112,10 +114,10 @@ ax3a = Axis(
     xlabel = "C. elegans strain",
     # xlabelfont = "TeX Gyre Heros Makie Italic",
     xticks = (1:3, levels(bufferspeeds.worm)),
-    ylabel = "Average speed (<unit>)",
+    ylabel = "Average speed (µm/sec)",
 )
 
-ylims!(-50000,150000)
+ylims!(-50,500)
 dodge = levelcode.(bufferspeeds.bacteria)
 
 violin!(ax3a, levelcode.(bufferspeeds.worm), bufferspeeds.speed, dodge = dodge, color = map(d->d==1 ? :blue : :red, dodge))
@@ -125,10 +127,10 @@ ax3b = Axis(
     title = "DA",
     xlabel = "C. elegans strain",
     xticks = (1:3, levels(dopaminespeeds.worm)),
-    ylabel = "Average speed (<unit>)",
+    ylabel = "Average speed (µm/sec)",
 )
 
-ylims!(-50000,150000)
+ylims!(-50,500)
 dodge = levelcode.(dopaminespeeds.bacteria)
 
 violin!(ax3b, levelcode.(dopaminespeeds.worm), dopaminespeeds.speed, dodge = dodge, color = map(d->d==1 ? :blue : :red, dodge))
@@ -147,4 +149,4 @@ Legend(fig3[2, :],
     titleposition = :left)
 
 
-save("./dopamine/experiment4/fig3.png", fig3)
+save(joinpath(experimentdir, "fig3.png"), fig3)
