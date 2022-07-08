@@ -2,8 +2,8 @@ module CeDataAnalysis
 
 # "export" functions / variables that should be accessible when you do `using CeDataAnalysis`
 export  load_tracks!,
-        distance,
-        speed,
+        distance!,
+        speed!,
         averageoverfive,
         conditionstats,
         allstats
@@ -53,7 +53,7 @@ end
 
 
 # CALCULATE DISTANCE FROM POSITION (µm/0.2sec)
-function distance(df)
+function distance!(df)
     df.distance = map(1:nrow(df)) do ri 
         if ri == 1 || df.id[ri] != df.id[ri-1] || df.track[ri] != df.track[ri-1] # if first row in dataframe or condition (id) or track
             return missing # don't calculate distance
@@ -73,7 +73,7 @@ end
 
 # CALCULATE SPEED FROM DISTANCE
 # since distance is being measured across 0.2sec, speed in µm/sec = distance(µm) / 0.2sec
-function speed(df; duration=0.2)
+function speed!(df; duration=0.2)
     df.speed = map(1:nrow(df)) do ri 
         return df.distance[ri] / duration
     end # add column to df with speeds
