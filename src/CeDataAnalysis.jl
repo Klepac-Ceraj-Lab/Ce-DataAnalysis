@@ -2,8 +2,8 @@ module CeDataAnalysis
 
 # "export" functions / variables that should be accessible when you do `using CeDataAnalysis`
 export  load_tracks!,
-        distance,
-        speed,
+        distance!,
+        speed!,
         averageoverfive,
         conditionstats,
         allstats
@@ -17,11 +17,9 @@ using Distances
 
 
 
-# TAKE 5 POSITION MEASUREMENTS EVERY SEC
+# CREATE DATAFRAME FROM CSV
 function load_tracks!(existingdf, file, id)
     tracks = CSV.read(file, DataFrame; header=5) # import CSV to DataFrame
-
-    subset!(tracks, :Frame=> ByRow(num-> num % 5 == 0)) # filter df down to 5 position measurements every sec
 
     select!(tracks, Not([:Frame, :Time])) # delete Frame and Time columns 
     
@@ -53,18 +51,18 @@ end
 
 
 # CALCULATE DISTANCE FROM POSITION (µm/0.2sec)
-function distance(df)
+function distance!(df)
     df.distance = map(1:nrow(df)) do ri 
         if ri == 1 || df.id[ri] != df.id[ri-1] || df.track[ri] != df.track[ri-1] # if first row in dataframe or condition (id) or track
             return missing # don't calculate distance
         else # calculate distance between point in row to point in previous row
-            return euclidean([df.xpos[ri-1], df.xpos[ri]], [df.ypos[ri-1], df.ypos[ri]]) 
+            return euclidean((df.xpos[ri-1], df.ypos[ri-1]), (df.xpos[ri], df.ypos[ri]))
         end
     end # add column to df with distances
 
     dropmissing!(df) # delete rows with 'missing' distances
 
-    select!(df, [:id, :track, :distance]) # filter out :xpos and :ypos columns
+    # select!(df, [:id, :track, :distance]) # filter out :xpos and :ypos columns
 
     return df
 end
@@ -73,7 +71,7 @@ end
 
 # CALCULATE SPEED FROM DISTANCE
 # since distance is being measured across 0.2sec, speed in µm/sec = distance(µm) / 0.2sec
-function speed(df; duration=0.2)
+function speed!(df; duration=0.2)
     df.speed = map(1:nrow(df)) do ri 
         return df.distance[ri] / duration
     end # add column to df with speeds

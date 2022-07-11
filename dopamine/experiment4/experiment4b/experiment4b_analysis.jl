@@ -25,23 +25,29 @@ files.id = [
 
 
 # DEFINE EXPERIMENT DIRECTORY
-experimentdir = "./22spring/experiment4/experiment4b/"
+experimentdir = @__DIR__
 
 
 
-# COMPILE DATAFRAME WITH 5 POSITION MEASUREMENTS EVERY SEC
-data = DataFrame(id=String[], track=Int[], xpos=Float64[], ypos=Float64[])
+# CREATE DATAFRAME FROM CSV
+alldata = DataFrame(id=String[], track=Int[], xpos=Float64[], ypos=Float64[])
 
-positionsdir = joinpath(experimentdir, "data/Position")
+positionsdir = joinpath(experimentdir, "data", "Position")
 
 for row in eachrow(files)
-    load_tracks!(data, joinpath(positionsdir, string(row.num, "Position.csv")), row.id)
+    load_tracks!(alldata, joinpath(positionsdir, string(row.num, "Position.csv")), row.id)
 end
 
+# TAKE EVERY 5 POSITION MEASUREMENTS
+data = alldata[5:5:end, :]
 
 
-# CALCULATE SPEED/DISTANCE FROM POSITION
-speed(data) # calculate speed from position
+
+# CALCULATE DISTANCE FROM POSITION (µm/0.2sec)
+distance!(data)
+
+# CALCULATE SPEED FROM DISTANCE
+speed!(data)
 
 # AVERAGE SPEED MEASUREMENTS ACROSS 5 SEC (AVERAGE OF 25 MEASUREMENTS)
 speedperfive = averageoverfive(data)
@@ -58,6 +64,3 @@ allstats(speedperfive)
 speedscsv = joinpath(experimentdir, "speeds.csv")
 
 CSV.write(speedscsv, speedperfive)
-
-# LOAD SPEEDS CSV INTO DATAFRAME
-speeds = DataFrame(CSV.File(speedscsv))
