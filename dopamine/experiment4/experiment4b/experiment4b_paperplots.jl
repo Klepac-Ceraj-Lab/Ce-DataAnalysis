@@ -71,7 +71,7 @@ fig2 = Figure(
 ax2a = Axis(
     fig2[1,1],
     title = "M9",
-    xlabel = "C. elegans strain",
+    xlabel = "Worm strain",
     xticks = (1:3, levels(bufferspeedstats.worm)),
     ylabel = "Average speed (µm/sec)",
 )
@@ -85,7 +85,7 @@ errorbars!(ax2a, errorpos, bufferspeedstats.meanofmeanspeed, bufferspeedstats.se
 ax2b = Axis(
     fig2[1,2],
     title = "DA",
-    xlabel = "C. elegans strain",
+    xlabel = "Worm strain",
     xticks = (1:3, levels(dopaminespeedstats.worm)),
     ylabel = "Average speed (µm/sec)",
 )
