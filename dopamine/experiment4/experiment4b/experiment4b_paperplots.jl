@@ -54,13 +54,13 @@ ax1 = Axis(
     fig1[1,1],
     xticks = (1:12, levels(speedstats.id)),
     xticklabelrotation = π/2,
-    ylabel = "Average Speed (<unit>)",
+    ylabel = "Average Speed (µm/sec)",
 )
 
 barplot!(levelcode.(speedstats.id), speedstats.meanofmeanspeed)
 errorbars!(levelcode.(speedstats.id), speedstats.meanofmeanspeed, speedstats.semofmeanspeed)
 
-save(joinpath(experimentdir, "fig1.png"), fig1)
+save(joinpath(experimentdir, "figI.png"), fig1)
 
 
 
@@ -109,4 +109,4 @@ Legend(fig2[2, :],
     orientation = :horizontal,
     titleposition = :left)
 
-save(joinpath(experimentdir, "fig2.png"), fig2)
+save(joinpath(experimentdir, "figII.png"), fig2)
