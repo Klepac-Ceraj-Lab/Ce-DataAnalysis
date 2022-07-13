@@ -5,6 +5,7 @@ using GLMakie
 using CeDataAnalysis
 using Statistics
 using StatsBase
+using HypothesisTests
 
 
 
@@ -20,7 +21,7 @@ trackstats = combine(tracks, :speed => mean => :meanspeed)
 
 # condition stats from individual stats 
 conditions = groupby(trackstats, [:id])
-speedstats = combine(conditions, :meanspeed => mean => :meanofmeanspeed, :meanspeed => sem => :semofmeanspeed)
+speedstats = combine(conditions, :meanspeed => mean => :meanofmeanspeed, :meanspeed => sem => :semofmeanspeed, :track => length => :n)
 # legnth of each DF is # tracks, which = sample size
 
 
