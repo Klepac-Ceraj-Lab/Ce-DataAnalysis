@@ -11,9 +11,7 @@ using StatsBase
 # LOAD SPEEDS CSV INTO DATAFRAME
 experimentdir = @__DIR__
 
-speeds = DataFrame(CSV.File("./dopamine/experiment4/experiment4b/speeds.csv"))
-
-
+speeds = DataFrame(CSV.File(joinpath(experimentdir, "speeds.csv")))
 
 # CALCULATE SUMMARY STATS BY FIRST CALCULATING SUMMARY STATS OF EACH TRACK
 # individual track stats
@@ -65,6 +63,8 @@ save(joinpath(experimentdir, "figI.png"), fig1)
 
 
 # two barplots in one figure: plots = medium, xaxis = worm, grouping = bacteria
+errorpos = [1.2, 0.8, 2.2, 1.8, 3.2, 2.8]
+
 fig2 = Figure(
 )
 
@@ -80,7 +80,7 @@ ylims!(0,300)
 dodge = levelcode.(bufferspeedstats.bacteria)
 
 barplot!(ax2a, levelcode.(bufferspeedstats.worm), bufferspeedstats.meanofmeanspeed, dodge = dodge, color = map(d->d==1 ? :blue : :red, dodge))
-errorbars!(ax2a, levelcode.(bufferspeedstats.worm), bufferspeedstats.meanofmeanspeed, bufferspeedstats.semofmeanspeed)
+errorbars!(ax2a, errorpos, bufferspeedstats.meanofmeanspeed, bufferspeedstats.semofmeanspeed)
 
 ax2b = Axis(
     fig2[1,2],
@@ -94,7 +94,7 @@ ylims!(0,300)
 dodge = levelcode.(dopaminespeedstats.bacteria)
 
 barplot!(ax2b, levelcode.(dopaminespeedstats.worm), dopaminespeedstats.meanofmeanspeed, dodge = dodge, color = map(d->d==1 ? :blue : :red, dodge))
-errorbars!(ax2b, levelcode.(dopaminespeedstats.worm), dopaminespeedstats.meanofmeanspeed, dopaminespeedstats.semofmeanspeed)
+errorbars!(ax2b, errorpos, dopaminespeedstats.meanofmeanspeed, dopaminespeedstats.semofmeanspeed)
 
 hideydecorations!(ax2b, grid = false)
 
