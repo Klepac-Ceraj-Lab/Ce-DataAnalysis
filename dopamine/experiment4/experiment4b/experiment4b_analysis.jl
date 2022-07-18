@@ -29,7 +29,7 @@ experimentdir = @__DIR__
 
 
 
-# CREATE DATAFRAME FROM CSV
+# CREATE DATAFRAME FROM CSV WITH ALL POSITION DATA
 alldata = DataFrame(id=String[], track=Int[], xpos=Float64[], ypos=Float64[])
 
 positionsdir = joinpath(experimentdir, "data", "Position")

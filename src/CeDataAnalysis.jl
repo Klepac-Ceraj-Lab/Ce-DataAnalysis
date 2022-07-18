@@ -17,7 +17,7 @@ using Distances
 
 
 
-# CREATE DATAFRAME FROM CSV
+# CREATE DATAFRAME FROM CSV WITH ALL POSITION DATA
 function load_tracks!(existingdf, file, id)
     tracks = CSV.read(file, DataFrame; header=5) # import CSV to DataFrame
 
