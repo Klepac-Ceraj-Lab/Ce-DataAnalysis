@@ -38,10 +38,9 @@ for row in eachrow(files)
     load_tracks!(alldata, joinpath(positionsdir, string(row.num, "Position.csv")), row.id)
 end
 
-# TAKE EVERY 5 POSITION MEASUREMENTS
-data = alldata[5:5:end, :]
-
-
+# TAKE EVERY 5 POSITION MEASUREMENTS OF EACH TRACK
+alltracks = groupby(alldata, [:id, :track]) # group df by condition id and track
+data = combine(groupby(alldata, [:id, :track]), x->x[5:5:end, :]) # filter out every fifth row of each grouped df
 
 # CALCULATE DISTANCE FROM POSITION (µm/0.2sec)
 distance!(data)
