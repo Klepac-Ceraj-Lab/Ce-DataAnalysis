@@ -54,12 +54,6 @@ speedperfive = averageoverfive(data)
 
 
 
-# SUMMARY STATS
-conditionstats(speedperfive)
-allstats(speedperfive)
-
-
-
 # SAVE FINAL DATAFRAME
 speedscsv = joinpath(experimentdir, "speeds.csv")
 
