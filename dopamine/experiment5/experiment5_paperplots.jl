@@ -125,9 +125,9 @@ fig3 = Figure(
 
 ax3a = Axis(
     fig3[1,1],
-    title = "Buffer",
+    title = "No Dopamine",
     xlabel = "Worm strain",
-    xticks = (1:2, ["wild type", "cat-2"]),
+    xticks = (1:2, ["wild type", "mutant"]),
     xlabelfont = "TeX Gyre Heros Makie Bold",
     ylabel = "Average speed (µm/sec)",
     ylabelfont = "TeX Gyre Heros Makie Bold",
@@ -143,7 +143,7 @@ ax3b = Axis(
     fig3[1,2],
     title = "Dopamine",
     xlabel = "Worm strain",
-    xticks = (1:2, ["wild type", "cat-2"]),
+    xticks = (1:2, ["wild type", "mutant"]),
     xlabelfont = "TeX Gyre Heros Makie Bold",
     ylabel = "Average speed (µm/sec)",
     ylabelfont = "TeX Gyre Heros Makie Bold",
