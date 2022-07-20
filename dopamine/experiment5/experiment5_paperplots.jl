@@ -69,37 +69,41 @@ fig2 = Figure(
 
 ax2a = Axis(
     fig2[1,1],
-    title = "M9",
+    title = "Buffer",
     xlabel = "Worm strain",
-    xticks = (1:3, levels(bufferspeedstats.worm)),
+    xticks = (1:3, ["wild type", "cat-2 #1", "cat-2 #2"]),
+    xlabelfont = "TeX Gyre Heros Makie Bold",
     ylabel = "Average speed (µm/sec)",
+    ylabelfont = "TeX Gyre Heros Makie Bold",
 )
 
-ylims!(0,350)
+ylims!(0,300)
 dodge = levelcode.(bufferspeedstats.bacteria)
 
-barplot!(ax2a, levelcode.(bufferspeedstats.worm), bufferspeedstats.meanofmeanspeed, dodge = dodge, color = map(d->d==1 ? :blue : :red, dodge))
+barplot!(ax2a, levelcode.(bufferspeedstats.worm), bufferspeedstats.meanofmeanspeed, dodge = dodge, color = map(d->d==1 ? "#cce9f2" : "#f7d4e2", dodge))
 errorbars!(ax2a, errorpos, bufferspeedstats.meanofmeanspeed, bufferspeedstats.semofmeanspeed)
 
 ax2b = Axis(
     fig2[1,2],
-    title = "DA",
+    title = "Dopamine",
     xlabel = "Worm strain",
-    xticks = (1:3, levels(dopaminespeedstats.worm)),
+    xticks = (1:3, ["wild type", "cat-2 #1", "cat-2 #2"]),
+    xlabelfont = "TeX Gyre Heros Makie Bold",
     ylabel = "Average speed (µm/sec)",
+    ylabelfont = "TeX Gyre Heros Makie Bold",
 )
 
-ylims!(0,350)
+ylims!(0,300)
 dodge = levelcode.(dopaminespeedstats.bacteria)
 
-barplot!(ax2b, levelcode.(dopaminespeedstats.worm), dopaminespeedstats.meanofmeanspeed, dodge = dodge, color = map(d->d==1 ? :blue : :red, dodge))
+barplot!(ax2b, levelcode.(dopaminespeedstats.worm), dopaminespeedstats.meanofmeanspeed, dodge = dodge, color = map(d->d==1 ? "#cce9f2" : "#f7d4e2", dodge))
 errorbars!(ax2b, errorpos, dopaminespeedstats.meanofmeanspeed, dopaminespeedstats.semofmeanspeed)
 
 hideydecorations!(ax2b, grid = false)
 
 
-elem_1 = [PolyElement(color = :blue)]
-elem_2 = [PolyElement(color = :red)]
+elem_1 = [PolyElement(color = "#cce9f2")]
+elem_2 = [PolyElement(color = "#f7d4e2")]
 
 Legend(fig2[2, :],
     [elem_1, elem_2],
