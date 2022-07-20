@@ -71,7 +71,7 @@ ax2a = Axis(
     fig2[1,1],
     title = "Buffer",
     xlabel = "Worm strain",
-    xticks = (1:3, ["wild type", "cat-2 #1", "cat-2 #2"]),
+    xticks = (1:2, ["wild type", "cat-2"]),
     xlabelfont = "TeX Gyre Heros Makie Bold",
     ylabel = "Average speed (µm/sec)",
     ylabelfont = "TeX Gyre Heros Makie Bold",
@@ -87,7 +87,7 @@ ax2b = Axis(
     fig2[1,2],
     title = "Dopamine",
     xlabel = "Worm strain",
-    xticks = (1:3, ["wild type", "cat-2 #1", "cat-2 #2"]),
+    xticks = (1:2, ["wild type", "cat-2"]),
     xlabelfont = "TeX Gyre Heros Makie Bold",
     ylabel = "Average speed (µm/sec)",
     ylabelfont = "TeX Gyre Heros Makie Bold",
@@ -113,3 +113,59 @@ Legend(fig2[2, :],
     titleposition = :left)
 
 save(joinpath(experimentdir, "figII.png"), fig2)
+
+# plot with just one cat-2 (CB)
+filter!(row -> (row.worm == "N2" || row.worm == "CB"),  bufferspeedstats)
+filter!(row -> (row.worm == "N2" || row.worm == "CB"),  dopaminespeedstats)
+
+errorpos = [1.2, 0.8, 2.2, 1.8]
+
+fig3 = Figure(
+)
+
+ax3a = Axis(
+    fig3[1,1],
+    title = "Buffer",
+    xlabel = "Worm strain",
+    xticks = (1:2, ["wild type", "cat-2"]),
+    xlabelfont = "TeX Gyre Heros Makie Bold",
+    ylabel = "Average speed (µm/sec)",
+    ylabelfont = "TeX Gyre Heros Makie Bold",
+)
+
+ylims!(0,300)
+dodge = levelcode.(bufferspeedstats.bacteria)
+
+barplot!(ax3a, levelcode.(bufferspeedstats.worm), bufferspeedstats.meanofmeanspeed, dodge = dodge, color = map(d->d==1 ? "#cce9f2" : "#f7d4e2", dodge))
+errorbars!(ax3a, errorpos, bufferspeedstats.meanofmeanspeed, bufferspeedstats.semofmeanspeed)
+
+ax3b = Axis(
+    fig3[1,2],
+    title = "Dopamine",
+    xlabel = "Worm strain",
+    xticks = (1:3, ["wild type", "cat-2 #1", "cat-2 #2"]),
+    xlabelfont = "TeX Gyre Heros Makie Bold",
+    ylabel = "Average speed (µm/sec)",
+    ylabelfont = "TeX Gyre Heros Makie Bold",
+)
+
+ylims!(0,300)
+dodge = levelcode.(dopaminespeedstats.bacteria)
+
+barplot!(ax3b, levelcode.(dopaminespeedstats.worm), dopaminespeedstats.meanofmeanspeed, dodge = dodge, color = map(d->d==1 ? "#cce9f2" : "#f7d4e2", dodge))
+errorbars!(ax3b, errorpos, dopaminespeedstats.meanofmeanspeed, dopaminespeedstats.semofmeanspeed)
+
+hideydecorations!(ax3b, grid = false)
+
+
+elem_1 = [PolyElement(color = "#cce9f2")]
+elem_2 = [PolyElement(color = "#f7d4e2")]
+
+Legend(fig3[2, :],
+    [elem_1, elem_2],
+    ["No", "Yes"],
+    "Bacteria Presence",
+    orientation = :horizontal,
+    titleposition = :left)
+
+save(joinpath(experimentdir, "figIII.png"), fig3)
