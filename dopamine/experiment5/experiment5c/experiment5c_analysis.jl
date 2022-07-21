@@ -6,21 +6,23 @@ using CSV
 
 # CREATE DATAFRAME OF FILE NUMBERS AND IDS
 files = DataFrame()
-files.num = 233:284
+files.num = 194:238
 files.id = [
-    fill("DA_N2_OP50", length(233:237));
-    fill("DA_N2_NGM", length(238:240));
-    fill("DA_CB_OP50", length(241:243));
-    fill("DA_CB_NGM", length(244:248));
-    fill("DA_MT_OP50", length(249:254));
-    fill("DA_MT_NGM", length(255:257));
-    fill("M9_N2_OP50", length(258:261));
-    fill("M9_N2_NGM", length(262:265));
-    fill("M9_CB_OP50", length(266:269));
-    fill("M9_CB_NGM", length(270:273));
-    fill("M9_MT_OP50", length(274:278));
-    fill("M9_MT_NGM", length(279:284))
+    fill("DA_N2_OP50", length(194:196));
+    fill("DA_N2_NGM", length(197:200));
+    fill("DA_CB_OP50", length(201:203));
+    fill("DA_CB_NGM", length(204:206));
+    fill("DA_MT_OP50", length(207:209));
+    fill("DA_MT_NGM", length(210:213));
+    fill("M9_N2_OP50", length(214:217));
+    fill("M9_N2_NGM", length(218:221));
+    fill("M9_CB_OP50", length(222:225));
+    fill("M9_CB_NGM", length(226:230));
+    fill("M9_MT_OP50", length(231:234));
+    fill("M9_MT_NGM", length(235:238))
 ]
+
+deleteat!(files, 8) # did not get data from VID201 --> deleted row for that file
 
 
 
