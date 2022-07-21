@@ -80,7 +80,7 @@ ax2a = Axis(
 ylims!(0,300)
 dodge = levelcode.(bufferspeedstats.bacteria)
 
-barplot!(ax2a, levelcode.(bufferspeedstats.worm), bufferspeedstats.meanofmeanspeed, dodge = dodge, color = map(d->d==1 ? "#cce9f2" : "#f7d4e2", dodge))
+barplot!(ax2a, levelcode.(bufferspeedstats.worm), bufferspeedstats.meanofmeanspeed, dodge = dodge, color = map(d->d==1 ? "#bbdaef" : "#efafcb", dodge))
 errorbars!(ax2a, errorpos, bufferspeedstats.meanofmeanspeed, bufferspeedstats.semofmeanspeed)
 
 ax2b = Axis(
@@ -96,14 +96,14 @@ ax2b = Axis(
 ylims!(0,300)
 dodge = levelcode.(dopaminespeedstats.bacteria)
 
-barplot!(ax2b, levelcode.(dopaminespeedstats.worm), dopaminespeedstats.meanofmeanspeed, dodge = dodge, color = map(d->d==1 ? "#cce9f2" : "#f7d4e2", dodge))
+barplot!(ax2b, levelcode.(dopaminespeedstats.worm), dopaminespeedstats.meanofmeanspeed, dodge = dodge, color = map(d->d==1 ? "#bbdaef" : "#efafcb", dodge))
 errorbars!(ax2b, errorpos, dopaminespeedstats.meanofmeanspeed, dopaminespeedstats.semofmeanspeed)
 
 hideydecorations!(ax2b, grid = false)
 
 
-elem_1 = [PolyElement(color = "#cce9f2")]
-elem_2 = [PolyElement(color = "#f7d4e2")]
+elem_1 = [PolyElement(color = "#bbdaef")]
+elem_2 = [PolyElement(color = "#efafcb")]
 
 Legend(fig2[2, :],
     [elem_1, elem_2],
