@@ -217,6 +217,15 @@ ax4a = Axis(
     xlabelfont = "TeX Gyre Heros Makie Bold",
     ylabel = "Average speed (µm/sec)",
     ylabelfont = "TeX Gyre Heros Makie Bold",
+    titlecolor = "#825ca5",
+    topspinecolor = "#825ca5",
+    bottomspinecolor = "#825ca5",
+    leftspinecolor = "#825ca5",
+    rightspinecolor = "#825ca5",
+    xtickcolor = "#825ca5",
+    xticklabelcolor = "#825ca5",
+    ytickcolor = "#825ca5",
+    yticklabelcolor = "#825ca5",
 )
 
 dodge = levelcode.(bufferspeedstats.bacteria)
@@ -236,6 +245,15 @@ ax4b = Axis(
     xlabelfont = "TeX Gyre Heros Makie Bold",
     ylabel = "Average speed (µm/sec)",
     ylabelfont = "TeX Gyre Heros Makie Bold",
+    titlecolor = "#5aaa46",
+    topspinecolor = "#5aaa46",
+    bottomspinecolor = "#5aaa46",
+    leftspinecolor = "#5aaa46",
+    rightspinecolor = "#5aaa46",
+    xtickcolor = "#5aaa46",
+    xticklabelcolor = "#5aaa46",
+    ytickcolor = "#5aaa46",
+    yticklabelcolor = "#5aaa46",
 )
 
 dodge = levelcode.(dopaminespeedstats.bacteria)
