@@ -115,6 +115,8 @@ Legend(fig2[2, :],
 
 save(joinpath(experimentdir, "figII.png"), fig2)
 
+
+
 # plot with just one cat-2 (CB)
 filter!(row -> (row.worm == "N2" || row.worm == "CB"),  bufferspeedstats)
 filter!(row -> (row.worm == "N2" || row.worm == "CB"),  dopaminespeedstats)
@@ -212,6 +214,7 @@ fig4 = Figure(
 ax4a = Axis(
     fig4[1,1],
     title = "Buffer",
+    titlesize = 20,
     xlabel = "Worm strain",
     xticks = (1:3, ["wild type", "cat-2 #1", "cat-2 #2"]),
     xlabelfont = "TeX Gyre Heros Makie Bold",
@@ -236,6 +239,7 @@ errorbars!(ax4a, errorpos, bufferspeedstats.meanofmeanspeed, bufferspeedstats.se
 ax4b = Axis(
     fig4[1,2],
     title = "Dopamine",
+    titlesize = 20,
     xlabel = "Worm strain",
     xticks = (1:3, ["wild type", "cat-2 #1", "cat-2 #2"]),
     xlabelfont = "TeX Gyre Heros Makie Bold",
