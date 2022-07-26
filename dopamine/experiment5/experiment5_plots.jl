@@ -58,7 +58,7 @@ ax1 = Axis(
 barplot!(levelcode.(speedstats.id), speedstats.meanofmeanspeed)
 errorbars!(levelcode.(speedstats.id), speedstats.meanofmeanspeed, speedstats.semofmeanspeed)
 
-save(joinpath(experimentdir, "figI.png"), fig1)
+save(joinpath(experimentdir, "fig01.png"), fig1)
 
 
 
@@ -113,7 +113,7 @@ Legend(fig2[2, :],
     orientation = :horizontal,
     titleposition = :left)
 
-save(joinpath(experimentdir, "figII.png"), fig2)
+save(joinpath(experimentdir, "fig02.png"), fig2)
 
 
 
@@ -171,7 +171,7 @@ Legend(fig3[2, :],
     orientation = :horizontal,
     titleposition = :left)
 
-save(joinpath(experimentdir, "figIII.png"), fig3)
+save(joinpath(experimentdir, "fig03.png"), fig3)
 
 
 
@@ -280,7 +280,7 @@ Legend(fig4[2, :],
     orientation = :horizontal,
     titleposition = :left)
 
-save(joinpath(experimentdir, "figIV.png"), fig4)
+save(joinpath(experimentdir, "fig04.png"), fig4)
 
 
 
@@ -357,5 +357,5 @@ Legend(fig5[2, :],
     orientation = :horizontal,
     titleposition = :left)
 
-save(joinpath(experimentdir, "figV.png"), fig5)
+save(joinpath(experimentdir, "fig05.png"), fig5)
 
