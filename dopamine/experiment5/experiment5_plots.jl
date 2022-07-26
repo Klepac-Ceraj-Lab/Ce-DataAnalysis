@@ -23,8 +23,6 @@ conditions = groupby(trackstats, [:id])
 speedstats = combine(conditions, :meanspeed => mean => :meanofmeanspeed, :meanspeed => sem => :semofmeanspeed, :meanspeed => std => :stdofmeanspeed, :track => length => :n)
 # legnth of each DF is # tracks, which = sample size
 
-
-
 # MAKE CATEGORICAL ARRAYS FOR PLOTTING
 speedstats.medium = categorical(map(i-> split(i, '_')[1], speedstats.id), levels = ["M9", "DA"])
 speedstats.worm = categorical(map(i-> split(i, '_')[2], speedstats.id), levels = ["N2", "CB", "MT"])
@@ -39,6 +37,36 @@ speedstats.id = categorical(speedstats.id, levels=[ "DA_N2_OP50", "DA_N2_NGM",
 # separate speeds into two different dfs based on medium
 bufferspeedstats = filter(:medium => m -> m == "M9", speedstats)
 dopaminespeedstats = filter(:medium => m -> m == "DA", speedstats)
+
+
+
+# ANALYSIS FOR JITTERED DOT PLOT
+
+# dot plot of average speeds of each track in each condition needs trackstats
+trackstats.medium = categorical(map(i-> split(i, '_')[1], trackstats.id), levels = ["M9", "DA"])
+trackstats.bacteria = categorical(map(i-> split(i, '_')[3], trackstats.id), levels = ["NGM", "OP50"])
+trackstats.id = categorical(trackstats.id, levels=[ "DA_N2_OP50", "DA_N2_NGM",
+                                            "DA_CB_OP50", "DA_CB_NGM",
+                                            "DA_MT_OP50", "DA_MT_NGM",
+                                            "M9_N2_OP50", "M9_N2_NGM",
+                                            "M9_CB_OP50", "M9_CB_NGM",
+                                            "M9_MT_OP50", "M9_MT_NGM"])
+
+# separate speeds into two different dfs based on medium and bacteria
+buffertrackstats = filter(:medium => m -> m == "M9", trackstats)
+dopaminetrackstats = filter(:medium => m -> m == "DA", trackstats)
+
+# add id level codes to each df and reassign values for scatter
+buffertrackstats.idlevel = levelcode.(buffertrackstats.id)
+buffertrackstats.idlevel = replace(buffertrackstats.idlevel, 7=>1.2, 8=>0.8, 9=>2.2, 10=>1.8, 11=>3.2, 12=>2.8)
+dopaminetrackstats.idlevel = levelcode.(dopaminetrackstats.id)
+dopaminetrackstats.idlevel = replace(dopaminetrackstats.idlevel, 1=>1.2, 2=>0.8, 3=>2.2, 4=>1.8, 5=>3.2, 6=>2.8)
+
+# split buffer and dopamine DFs by bactera in order to assign colors
+bufferno = filter(:bacteria => b -> b == "NGM", buffertrackstats)
+bufferyes = filter(:bacteria => b -> b == "OP50", buffertrackstats)
+dopamineno = filter(:bacteria => b -> b == "NGM", dopaminetrackstats)
+dopamineyes = filter(:bacteria => b -> b == "OP50", dopaminetrackstats)
 
 
 
@@ -102,7 +130,6 @@ errorbars!(ax2b, errorpos, dopaminespeedstats.meanofmeanspeed, dopaminespeedstat
 
 hideydecorations!(ax2b, grid = false)
 
-
 elem_1 = [PolyElement(color = "#bbdaef")]
 elem_2 = [PolyElement(color = "#efafcb")]
 
@@ -160,7 +187,6 @@ errorbars!(ax3b, errorpos, dopaminespeedstats.meanofmeanspeed, dopaminespeedstat
 
 hideydecorations!(ax3b, grid = false)
 
-
 elem_1 = [PolyElement(color = "#cce9f2")]
 elem_2 = [PolyElement(color = "#f7d4e2")]
 
@@ -172,36 +198,6 @@ Legend(fig3[2, :],
     titleposition = :left)
 
 save(joinpath(experimentdir, "fig03.png"), fig3)
-
-
-
-# ANALYSIS FOR JITTERED DOT PLOT
-
-# dot plot of average speeds of each track in each condition needs trackstats
-trackstats.medium = categorical(map(i-> split(i, '_')[1], trackstats.id), levels = ["M9", "DA"])
-trackstats.bacteria = categorical(map(i-> split(i, '_')[3], trackstats.id), levels = ["NGM", "OP50"])
-trackstats.id = categorical(trackstats.id, levels=[ "DA_N2_OP50", "DA_N2_NGM",
-                                            "DA_CB_OP50", "DA_CB_NGM",
-                                            "DA_MT_OP50", "DA_MT_NGM",
-                                            "M9_N2_OP50", "M9_N2_NGM",
-                                            "M9_CB_OP50", "M9_CB_NGM",
-                                            "M9_MT_OP50", "M9_MT_NGM"])
-
-# separate speeds into two different dfs based on medium and bacteria
-buffertrackstats = filter(:medium => m -> m == "M9", trackstats)
-dopaminetrackstats = filter(:medium => m -> m == "DA", trackstats)
-
-# add id level codes to each df and reassign values for scatter
-buffertrackstats.idlevel = levelcode.(buffertrackstats.id)
-buffertrackstats.idlevel = replace(buffertrackstats.idlevel, 7=>1.2, 8=>0.8, 9=>2.2, 10=>1.8, 11=>3.2, 12=>2.8)
-dopaminetrackstats.idlevel = levelcode.(dopaminetrackstats.id)
-dopaminetrackstats.idlevel = replace(dopaminetrackstats.idlevel, 1=>1.2, 2=>0.8, 3=>2.2, 4=>1.8, 5=>3.2, 6=>2.8)
-
-# split buffer and dopamine DFs by bactera in order to assign colors
-bufferno = filter(:bacteria => b -> b == "NGM", buffertrackstats)
-bufferyes = filter(:bacteria => b -> b == "OP50", buffertrackstats)
-dopamineno = filter(:bacteria => b -> b == "NGM", dopaminetrackstats)
-dopamineyes = filter(:bacteria => b -> b == "OP50", dopaminetrackstats)
 
 
 
@@ -268,7 +264,6 @@ errorbars!(ax4b, errorpos, dopaminespeedstats.meanofmeanspeed, dopaminespeedstat
 linkyaxes!(ax4a, ax4b)
 
 hideydecorations!(ax4b, grid = false)
-
 
 elem_1 = [PolyElement(color = "#bbdaef")]
 elem_2 = [PolyElement(color = "#efafcb")]
@@ -345,7 +340,6 @@ errorbars!(ax5b, errorpos, dopaminespeedstats.meanofmeanspeed, dopaminespeedstat
 linkyaxes!(ax5a, ax5b)
 
 hideydecorations!(ax5b, grid = false)
-
 
 elem_1 = [PolyElement(color = "#bbdaef")]
 elem_2 = [PolyElement(color = "#efafcb")]
