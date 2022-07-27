@@ -15,20 +15,36 @@ experimentdir = @__DIR__
 
 speeds = DataFrame(CSV.File(joinpath(experimentdir, "speeds.csv")))
 
-# CALCULATE SUMMARY STATS BY FIRST CALCULATING SUMMARY STATS OF EACH TRACK
-# individual track stats
+# CALCULATE MEAN AND STD SPEED OF EACH TRACK
 tracks = groupby(speeds, [:experiment, :id, :track])
 trackstats = combine(tracks, :speed => mean => :meanspeed, :speed => std => :stdspeed)
+
+# BIN TRACKS ACCORDING TO MEAN SPEED
+bin = Vector{Int}()
+
+for row in 1:nrow(trackstats)
+    if 0 ≤ trackstats.meanspeed[row] < 100
+        push!(bin, 1)
+    elseif 100 ≤ trackstats.meanspeed[row] < 200
+        push!(bin, 2)
+    elseif 200 ≤ trackstats.meanspeed[row] < 300
+        push!(bin, 3)
+    elseif 300 ≤ trackstats.meanspeed[row]
+        push!(bin, 4)
+    end
+end
+
+trackstats.bin = bin
 
 # MAKE CATEGORICAL ARRAYS FOR PLOTTING
 trackstats.medium = categorical(map(i-> split(i, '_')[1], trackstats.id), levels = ["M9", "DA"])
 trackstats.worm = categorical(map(i-> split(i, '_')[2], trackstats.id), levels = ["N2", "CB", "MT"])
 trackstats.bacteria = categorical(map(i-> split(i, '_')[3], trackstats.id), levels = ["NGM", "OP50"])
 
-# only keep data on bacterial lawn
+# ONLY KEEP DATA ON BACTERIAL LAWN
 filter!(:bacteria => x -> x == "OP50", trackstats)
 
-# separate all conditions into new DFs
+# SEPARATE ALL CONDITIONS INTO NEW DFs
 buffer = filter(:medium => x -> x == "M9", trackstats)
 bufferN2 = filter(:worm => x -> x == "N2", buffer)
 bufferCB = filter(:worm => x -> x == "CB", buffer)
@@ -39,10 +55,22 @@ dopamineN2 = filter(:worm => x -> x == "N2", dopamine)
 dopamineCB = filter(:worm => x -> x == "CB", dopamine)
 dopamineMT = filter(:worm => x -> x == "MT", dopamine)
 
+# GET MEAN AND STD OF MEAN SPEED AND SEM OF EACH BIN OF EACH CONDITION
+# x = mean of mean speed
+# y = mean of std speed
+# error = sem of std speed
+bufferN2binned = combine(groupby(bufferN2, [:bin]), :meanspeed => mean => :meanofmeanspeed, :stdspeed => mean => :meanofstdspeed, :stdspeed => sem => :semofstdspeed, :track => length => :n)
+bufferCBbinned = combine(groupby(bufferCB, [:bin]), :meanspeed => mean => :meanofmeanspeed, :stdspeed => mean => :meanofstdspeed, :stdspeed => sem => :semofstdspeed, :track => length => :n)
+bufferMTbinned = combine(groupby(bufferMT, [:bin]), :meanspeed => mean => :meanofmeanspeed, :stdspeed => mean => :meanofstdspeed, :stdspeed => sem => :semofstdspeed, :track => length => :n)
+dopamineN2binned = combine(groupby(dopamineN2, [:bin]), :meanspeed => mean => :meanofmeanspeed, :stdspeed => mean => :meanofstdspeed, :stdspeed => sem => :semofstdspeed, :track => length => :n)
+dopamineCBbinned = combine(groupby(dopamineCB, [:bin]), :meanspeed => mean => :meanofmeanspeed, :stdspeed => mean => :meanofstdspeed, :stdspeed => sem => :semofstdspeed, :track => length => :n)
+dopamineMTbinned = combine(groupby(dopamineMT, [:bin]), :meanspeed => mean => :meanofmeanspeed, :stdspeed => mean => :meanofstdspeed, :stdspeed => sem => :semofstdspeed, :track => length => :n)
+
 
 
 # PLOT
 
+# scatter of individual mean speeds
 fig1 = Figure(
 )
 
@@ -80,3 +108,20 @@ Legend(fig1[2, :],
     titleposition = :left)
 
 # save(joinpath(experimentdir, "fig101.png"), fig1)
+
+
+
+# scatter and line of binned mean speeds
+fig2 = Figure(
+)
+
+ax2a = Axis(
+    fig2[1,1],
+    title = "Buffer",
+    xlabel = "Mean speed (µm/s)",
+    ylabel = "Std speed (µm/s)",
+)
+
+N2 = scatter!(ax2a, bufferN2binned.meanofmeanspeed, bufferN2binned.meanofstdspeed, color = :pink)
+CB = scatter!(ax2a, bufferCBbinned.meanofmeanspeed, bufferCBbinned.meanofstdspeed, color = :lightgreen)
+MT = scatter!(ax2a, bufferMTbinned.meanofmeanspeed, bufferMTbinned.meanofstdspeed, color = :lightblue)
