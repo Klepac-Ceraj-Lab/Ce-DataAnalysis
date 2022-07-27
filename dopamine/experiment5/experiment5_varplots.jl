@@ -49,8 +49,8 @@ fig1 = Figure(
 ax1a = Axis(
     fig1[1,1],
     title = "Buffer",
-    xlabel = "Mean speed (µm/sec)",
-    ylabel = "Std speed",
+    xlabel = "Mean speed (µm/s)",
+    ylabel = "Std speed (µm/s)",
 )
 
 N2 = scatter!(ax1a, bufferN2.meanspeed, bufferN2.stdspeed, color = :pink)
@@ -60,8 +60,8 @@ MT = scatter!(ax1a, bufferMT.meanspeed, bufferMT.stdspeed, color = :lightblue)
 ax1b = Axis(
     fig1[1,2],
     title = "Dopamine",
-    xlabel = "Mean speed (µm/sec)",
-    ylabel = "Std speed",
+    xlabel = "Mean speed (µm/s)",
+    ylabel = "Std speed (µm/s)",
 )
 
 scatter!(ax1b, dopamineN2.meanspeed, dopamineN2.stdspeed, color = :pink)
@@ -74,9 +74,9 @@ linkxaxes!(ax1a, ax1b)
 
 Legend(fig1[2, :],
     [N2, CB, MT],
-    ["wild type", "cat-2 #1", "cat-2 #2"],
+    ["wild type", "cat-2 CB", "cat-2 MT"],
     "Worm strain",
     orientation = :horizontal,
     titleposition = :left)
 
-save(joinpath(experimentdir, "fig101.png"), fig1)
+# save(joinpath(experimentdir, "fig101.png"), fig1)
