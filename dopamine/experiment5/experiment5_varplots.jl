@@ -19,18 +19,27 @@ speeds = DataFrame(CSV.File(joinpath(experimentdir, "speeds.csv")))
 tracks = groupby(speeds, [:experiment, :id, :track])
 trackstats = combine(tracks, :speed => mean => :meanspeed, :speed => std => :stdspeed)
 
+# FILTER TRACKS WITH NAN VALUES FOR STD
+filter!(:stdspeed => x -> !(isnan(x)), trackstats)
+
 # BIN TRACKS ACCORDING TO MEAN SPEED
 bin = Vector{Int}()
 
 for row in 1:nrow(trackstats)
-    if 0 ≤ trackstats.meanspeed[row] < 100
+    if 0 ≤ trackstats.meanspeed[row] < 50
         push!(bin, 1)
-    elseif 100 ≤ trackstats.meanspeed[row] < 200
+    elseif 50 ≤ trackstats.meanspeed[row] < 100
         push!(bin, 2)
-    elseif 200 ≤ trackstats.meanspeed[row] < 300
+    elseif 100 ≤ trackstats.meanspeed[row] < 150
         push!(bin, 3)
-    elseif 300 ≤ trackstats.meanspeed[row]
+    elseif 150 ≤ trackstats.meanspeed[row] < 200
         push!(bin, 4)
+    elseif 200 ≤ trackstats.meanspeed[row] < 250
+        push!(bin, 5)
+    elseif 250 ≤ trackstats.meanspeed[row] < 300
+        push!(bin, 6)
+    elseif 300 ≤ trackstats.meanspeed[row]
+        push!(bin, 7)
     end
 end
 
@@ -125,3 +134,43 @@ ax2a = Axis(
 N2 = scatter!(ax2a, bufferN2binned.meanofmeanspeed, bufferN2binned.meanofstdspeed, color = :pink)
 CB = scatter!(ax2a, bufferCBbinned.meanofmeanspeed, bufferCBbinned.meanofstdspeed, color = :lightgreen)
 MT = scatter!(ax2a, bufferMTbinned.meanofmeanspeed, bufferMTbinned.meanofstdspeed, color = :lightblue)
+
+lines!(ax2a, bufferN2binned.meanofmeanspeed, bufferN2binned.meanofstdspeed, color = :pink)
+lines!(ax2a, bufferCBbinned.meanofmeanspeed, bufferCBbinned.meanofstdspeed, color = :lightgreen)
+lines!(ax2a, bufferMTbinned.meanofmeanspeed, bufferMTbinned.meanofstdspeed, color = :lightblue)
+
+errorbars!(ax2a, bufferN2binned.meanofmeanspeed, bufferN2binned.meanofstdspeed, bufferN2binned.semofstdspeed, color = :pink)
+errorbars!(ax2a, bufferCBbinned.meanofmeanspeed, bufferCBbinned.meanofstdspeed, bufferCBbinned.semofstdspeed, color = :lightgreen)
+errorbars!(ax2a, bufferMTbinned.meanofmeanspeed, bufferMTbinned.meanofstdspeed, bufferMTbinned.semofstdspeed, color = :lightblue)
+
+ax2b = Axis(
+    fig2[1,2],
+    title = "Dopamine",
+    xlabel = "Mean speed (µm/s)",
+    ylabel = "Std speed (µm/s)",
+)
+
+N2 = scatter!(ax2b, dopamineN2binned.meanofmeanspeed, dopamineN2binned.meanofstdspeed, color = :pink)
+CB = scatter!(ax2b, dopamineCBbinned.meanofmeanspeed, dopamineCBbinned.meanofstdspeed, color = :lightgreen)
+MT = scatter!(ax2b, dopamineMTbinned.meanofmeanspeed, dopamineMTbinned.meanofstdspeed, color = :lightblue)
+
+lines!(ax2b, dopamineN2binned.meanofmeanspeed, dopamineN2binned.meanofstdspeed, color = :pink)
+lines!(ax2b, dopamineCBbinned.meanofmeanspeed, dopamineCBbinned.meanofstdspeed, color = :lightgreen)
+lines!(ax2b, dopamineMTbinned.meanofmeanspeed, dopamineMTbinned.meanofstdspeed, color = :lightblue)
+
+errorbars!(ax2b, dopamineN2binned.meanofmeanspeed, dopamineN2binned.meanofstdspeed, dopamineN2binned.semofstdspeed, color = :pink)
+errorbars!(ax2b, dopamineCBbinned.meanofmeanspeed, dopamineCBbinned.meanofstdspeed, dopamineCBbinned.semofstdspeed, color = :lightgreen)
+errorbars!(ax2b, dopamineMTbinned.meanofmeanspeed, dopamineMTbinned.meanofstdspeed, dopamineMTbinned.semofstdspeed, color = :lightblue)
+
+linkyaxes!(ax2a, ax2b)
+hideydecorations!(ax2b, grid = false)
+linkxaxes!(ax2a, ax2b)
+
+Legend(fig2[2, :],
+    [N2, CB, MT],
+    ["wild type", "cat-2 CB", "cat-2 MT"],
+    "Worm strain",
+    orientation = :horizontal,
+    titleposition = :left)
+
+# save(joinpath(experimentdir, "fig102.png"), fig2)
