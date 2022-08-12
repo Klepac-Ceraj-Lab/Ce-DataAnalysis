@@ -25,10 +25,10 @@ filter!(:stdspeed => x -> !(isnan(x)), trackstats)
 # BIN TRACKS ACCORDING TO MEAN SPEED
 bin = Vector{Int}()
 
-bin = map(eachrow(trackstats)) do row
-    count(row.meanspeed) do s
-        s .> 0:50:300
-    end
+for row in 1:nrow(trackstats)
+    max = (maximum(trackstats.meanspeed) + 50)
+    binnum = count(trackstats.meanspeed[row] .> 0:50:max)
+    push!(bin, binnum)
 end
 
 trackstats.bin = bin
@@ -142,9 +142,9 @@ ax2b = Axis(
     ylabel = "Std speed (µm/s)",
 )
 
-N2 = scatter!(ax2b, dopamineN2binned.meanofmeanspeed, dopamineN2binned.meanofstdspeed, color = :pink)
-CB = scatter!(ax2b, dopamineCBbinned.meanofmeanspeed, dopamineCBbinned.meanofstdspeed, color = :lightgreen)
-MT = scatter!(ax2b, dopamineMTbinned.meanofmeanspeed, dopamineMTbinned.meanofstdspeed, color = :lightblue)
+scatter!(ax2b, dopamineN2binned.meanofmeanspeed, dopamineN2binned.meanofstdspeed, color = :pink)
+scatter!(ax2b, dopamineCBbinned.meanofmeanspeed, dopamineCBbinned.meanofstdspeed, color = :lightgreen)
+scatter!(ax2b, dopamineMTbinned.meanofmeanspeed, dopamineMTbinned.meanofstdspeed, color = :lightblue)
 
 lines!(ax2b, dopamineN2binned.meanofmeanspeed, dopamineN2binned.meanofstdspeed, color = :pink)
 lines!(ax2b, dopamineCBbinned.meanofmeanspeed, dopamineCBbinned.meanofstdspeed, color = :lightgreen)
