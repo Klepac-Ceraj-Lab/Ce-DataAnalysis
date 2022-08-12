@@ -25,30 +25,18 @@ filter!(:stdspeed => x -> !(isnan(x)), trackstats)
 # BIN TRACKS ACCORDING TO MEAN SPEED
 bin = Vector{Int}()
 
-for row in 1:nrow(trackstats)
-    if 0 ≤ trackstats.meanspeed[row] < 50
-        push!(bin, 1)
-    elseif 50 ≤ trackstats.meanspeed[row] < 100
-        push!(bin, 2)
-    elseif 100 ≤ trackstats.meanspeed[row] < 150
-        push!(bin, 3)
-    elseif 150 ≤ trackstats.meanspeed[row] < 200
-        push!(bin, 4)
-    elseif 200 ≤ trackstats.meanspeed[row] < 250
-        push!(bin, 5)
-    elseif 250 ≤ trackstats.meanspeed[row] < 300
-        push!(bin, 6)
-    elseif 300 ≤ trackstats.meanspeed[row]
-        push!(bin, 7)
+bin = map(eachrow(trackstats)) do row
+    count(row.meanspeed) do s
+        s .> 0:50:300
     end
 end
 
 trackstats.bin = bin
 
 # MAKE CATEGORICAL ARRAYS FOR PLOTTING
-trackstats.medium = categorical(map(i-> split(i, '_')[1], trackstats.id), levels = ["M9", "DA"])
-trackstats.worm = categorical(map(i-> split(i, '_')[2], trackstats.id), levels = ["N2", "CB", "MT"])
-trackstats.bacteria = categorical(map(i-> split(i, '_')[3], trackstats.id), levels = ["NGM", "OP50"])
+trackstats.medium = categorical(map(i-> split(i, '_')[1], trackstats.id); levels = ["M9", "DA"])
+trackstats.worm = categorical(map(i-> split(i, '_')[2], trackstats.id); levels = ["N2", "CB", "MT"])
+trackstats.bacteria = categorical(map(i-> split(i, '_')[3], trackstats.id); levels = ["NGM", "OP50"])
 
 # ONLY KEEP DATA ON BACTERIAL LAWN
 filter!(:bacteria => x -> x == "OP50", trackstats)
@@ -68,7 +56,11 @@ dopamineMT = filter(:worm => x -> x == "MT", dopamine)
 # x = mean of mean speed
 # y = mean of std speed
 # error = sem of std speed
-bufferN2binned = combine(groupby(bufferN2, [:bin]), :meanspeed => mean => :meanofmeanspeed, :stdspeed => mean => :meanofstdspeed, :stdspeed => sem => :semofstdspeed, :track => length => :n)
+bufferN2binned = combine(groupby(bufferN2, [:bin]), 
+            :meanspeed => mean => :meanofmeanspeed,
+            :stdspeed  => mean => :meanofstdspeed,
+            :stdspeed  => sem  => :semofstdspeed,
+            :track => length => :n)
 bufferCBbinned = combine(groupby(bufferCB, [:bin]), :meanspeed => mean => :meanofmeanspeed, :stdspeed => mean => :meanofstdspeed, :stdspeed => sem => :semofstdspeed, :track => length => :n)
 bufferMTbinned = combine(groupby(bufferMT, [:bin]), :meanspeed => mean => :meanofmeanspeed, :stdspeed => mean => :meanofstdspeed, :stdspeed => sem => :semofstdspeed, :track => length => :n)
 dopamineN2binned = combine(groupby(dopamineN2, [:bin]), :meanspeed => mean => :meanofmeanspeed, :stdspeed => mean => :meanofstdspeed, :stdspeed => sem => :semofstdspeed, :track => length => :n)
