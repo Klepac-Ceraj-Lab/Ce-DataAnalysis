@@ -28,17 +28,17 @@ trackstats.bacteria = categorical(map(i-> split(i, '_')[3], trackstats.id), leve
 # MODELS
 one = lm(@formula(meanspeed ~ 1), trackstats) # we don't have any var affecting speed
 
-m = lm(@formula(meanspeed ~ medium), trackstats)
-w = lm(@formula(meanspeed ~ worm), trackstats)
-b = lm(@formula(meanspeed ~ bacteria), trackstats)
+m = lm(@formula(meanspeed ~ medium), trackstats) # speed depends only on medium (buffer vs. dopamine)
+w = lm(@formula(meanspeed ~ worm), trackstats) # speed depends only on worm strain
+b = lm(@formula(meanspeed ~ bacteria), trackstats) # speed depends only on bacteria presence
 
-mw = lm(@formula(meanspeed ~ medium + worm), trackstats)
-wb = lm(@formula(meanspeed ~ worm + bacteria), trackstats)
-mb = lm(@formula(meanspeed ~ medium + bacteria), trackstats)
+mw = lm(@formula(meanspeed ~ medium + worm), trackstats) # speed depends on medium and worm
+wb = lm(@formula(meanspeed ~ worm + bacteria), trackstats) # speed depends on worm and bacteria
+mb = lm(@formula(meanspeed ~ medium + bacteria), trackstats) # speed depends on medium and bacteria
 
-mwb = lm(@formula(meanspeed ~ medium + worm + bacteria), trackstats)
+mwb = lm(@formula(meanspeed ~ medium + worm + bacteria), trackstats) # speed depends on all three variables
 
-wbintm = lm(@formula(meanspeed ~ worm*bacteria + medium), trackstats)
+wb_int_m = lm(@formula(meanspeed ~ worm*bacteria + medium), trackstats) # interaction between worm and bacteria
 # Coefficients:
 # ────────────────────────────────────────────────────────────────────────────────────────
 #                                Coef.  Std. Error       t  Pr(>|t|)  Lower 95%  Upper 95%
@@ -52,7 +52,7 @@ wbintm = lm(@formula(meanspeed ~ worm*bacteria + medium), trackstats)
 # worm: MT & bacteria: OP50    41.9327    12.8612     3.26    0.0012    16.6757    67.1896
 # ────────────────────────────────────────────────────────────────────────────────────────
 
-mwbint = lm(@formula(meanspeed ~ medium*worm*bacteria), trackstats)
+mwb_int = lm(@formula(meanspeed ~ medium*worm*bacteria), trackstats) # interaction between all variables
 # Coefficients:
 # ────────────────────────────────────────────────────────────────────────────────────────────────────────
 #                                               Coef.  Std. Error      t  Pr(>|t|)   Lower 95%   Upper 95%
@@ -87,7 +87,7 @@ ftest(mw.model, mwb.model)
 # ────────────────────────────────────────────────────────────────────────────
 
 # Does bacteria affect speed dependent on worm, also separating by medium?
-ftest(mw.model, wbintm.model)
+ftest(mw.model, wb_int_m.model)
 # F-test: 2 models fitted on 625 observations
 # ───────────────────────────────────────────────────────────────────────────
 #      DOF  ΔDOF           SSR          ΔSSR      R²     ΔR²       F*   p(>F)
@@ -97,7 +97,7 @@ ftest(mw.model, wbintm.model)
 # ───────────────────────────────────────────────────────────────────────────
 
 # Does bacteria affect speed dependent on worm and medium?
-ftest(one.model, mwbint.model)
+ftest(one.model, mwb_int.model)
 # F-test: 2 models fitted on 625 observations
 # ───────────────────────────────────────────────────────────────────────────
 #      DOF  ΔDOF           SSR          ΔSSR      R²     ΔR²       F*   p(>F)
@@ -107,7 +107,7 @@ ftest(one.model, mwbint.model)
 # ───────────────────────────────────────────────────────────────────────────
 
 # Is speed dependent on an interactions among all variables?
-ftest(mwb.model, mwbint.model)
+ftest(mwb.model, mwb_int.model)
 # F-test: 2 models fitted on 625 observations
 # ──────────────────────────────────────────────────────────────────────────
 #      DOF  ΔDOF           SSR          ΔSSR      R²     ΔR²      F*   p(>F)
