@@ -3,6 +3,7 @@ using CSV
 using Statistics
 using CategoricalArrays
 using GLM
+using RCall
 
 
 
@@ -142,3 +143,21 @@ ftest(mwb.model, mwb_int.model)
 # [1]    6        2510861.8156                0.2551                        
 # [2]   13     7  2375077.8791  -135783.9365  0.2954  0.0403  5.0065  <1e-04
 # ──────────────────────────────────────────────────────────────────────────
+
+# ## Using RCall
+#
+
+@rput trackstats
+
+R"mod<- aov(meanspeed ~ medium + worm * bacteria, data=trackstats)"
+R"summary(mod)"
+
+# RObject{VecSxp}
+#                Df  Sum Sq Mean Sq F value   Pr(>F)    
+# medium          1   79575   79575  20.054 8.97e-06 ***
+# worm            2   34036   17018   4.289 0.014132 *  
+# bacteria        1  746349  746349 188.089  < 2e-16 ***
+# worm:bacteria   2   58602   29301   7.384 0.000677 ***
+# Residuals     618 2452260    3968                     
+# ---
+# Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
