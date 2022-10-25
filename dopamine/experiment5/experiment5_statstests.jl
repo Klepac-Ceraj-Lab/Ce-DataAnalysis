@@ -132,7 +132,7 @@ ftest(mwb.model, wb_int_m.model)
 
 # interaction among all vars
 mwb = lm(@formula(meanspeed ~ medium + worm + bacteria), trackstats)
-mwb_int = lm(@formula(meanspeed ~ medium + worm + bacteria + medium*worm*bacteria), trackstats)
+mwb_int = lm(@formula(meanspeed ~ medium*worm*bacteria), trackstats)
 
 ftest(mwb.model, mwb_int.model)
 # F-test: 2 models fitted on 625 observations
@@ -142,3 +142,13 @@ ftest(mwb.model, mwb_int.model)
 # [1]    6        2510861.8156                0.2551                        
 # [2]   13     7  2375077.8791  -135783.9365  0.2954  0.0403  5.0065  <1e-04
 # ──────────────────────────────────────────────────────────────────────────
+
+mwb = lm(@formula(meanspeed ~ worm*bacteria), trackstats)
+
+mwb = lm(@formula(meanspeed ~ worm*bacteria), subset(trackstats, :medium=>ByRow(!=("DA")))) # just buffer
+mwb = lm(@formula(meanspeed ~ worm*bacteria), subset(trackstats, :medium=>ByRow(!=("M9")))) # just dopamine
+
+# this is our test!
+three_int = lm(@formula(meanspeed ~ medium*worm*bacteria), trackstats)
+two_int = lm(@formula(meanspeed ~ medium*worm + medium*bacteria + worm*bacteria), trackstats)
+ftest(three_int.model, two_int.model)
