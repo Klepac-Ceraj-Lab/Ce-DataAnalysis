@@ -16,7 +16,7 @@ speeds = DataFrame(CSV.File(joinpath(experimentdir, "speeds.csv")))
 # CALCULATE SUMMARY STATS BY FIRST CALCULATING SUMMARY STATS OF EACH TRACK
 # individual track stats
 tracks = groupby(speeds, [:id, :track])
-trackstats = combine(tracks, :correctspeed => mean => :meanspeed) # :correctspeed instead of :speed like normal
+trackstats = combine(tracks, :speed => mean => :meanspeed)
 
 # condition stats from individual stats 
 conditions = groupby(trackstats, [:id])

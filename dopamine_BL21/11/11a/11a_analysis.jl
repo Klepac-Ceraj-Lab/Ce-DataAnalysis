@@ -56,6 +56,8 @@ for row in eachrow(speedperfive)
     speedperfive.correctspeed = speedperfive.speed * 10
 end
 
+select!(speedperfive, Not([:speed]))
+rename!(speedperfive,:correctspeed => :speed)
 
 
 # SAVE FINAL DATAFRAME
