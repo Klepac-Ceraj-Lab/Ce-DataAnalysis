@@ -26,49 +26,49 @@ speedstats = combine(conditions, :meanspeed => mean => :meanofmeanspeed, :meansp
 
 
 # MAKE CATEGORICAL ARRAYS FOR PLOTTING
-speedstats.medium = categorical(map(i-> split(i, '_')[1], speedstats.id), levels = ["M9", "DA"])
+speedstats.medium = categorical(map(i-> split(i, '_')[1], speedstats.id), levels = ["M9", "LD"])
 speedstats.worm = categorical(map(i-> split(i, '_')[2], speedstats.id), levels = ["N2", "CB", "MT"])
 speedstats.bacteria = categorical(map(i-> split(i, '_')[3], speedstats.id), levels = ["NGM", "BL21"])
-speedstats.id = categorical(speedstats.id, levels=[ "DA_N2_BL21", "DA_N2_NGM",
-                                            "DA_CB_BL21", "DA_CB_NGM",
-                                            "DA_MT_BL21", "DA_MT_NGM",
+speedstats.id = categorical(speedstats.id, levels=[ "LD_N2_BL21", "LD_N2_NGM",
+                                            "LD_CB_BL21", "LD_CB_NGM",
+                                            "LD_MT_BL21", "LD_MT_NGM",
                                             "M9_N2_BL21", "M9_N2_NGM",
                                             "M9_CB_BL21", "M9_CB_NGM",
                                             "M9_MT_BL21", "M9_MT_NGM"])
 
 # separate speeds into two different dfs based on medium
 bufferspeedstats = filter(:medium => m -> m == "M9", speedstats)
-dopaminespeedstats = filter(:medium => m -> m == "DA", speedstats)
+ldopaspeedstats = filter(:medium => m -> m == "LD", speedstats)
 
 
 
 # ANALYSIS FOR JITTERED DOT PLOT
 
 # dot plot of average speeds of each track in each condition needs trackstats
-trackstats.medium = categorical(map(i-> split(i, '_')[1], trackstats.id), levels = ["M9", "DA"])
+trackstats.medium = categorical(map(i-> split(i, '_')[1], trackstats.id), levels = ["M9", "LD"])
 trackstats.bacteria = categorical(map(i-> split(i, '_')[3], trackstats.id), levels = ["NGM", "BL21"])
-trackstats.id = categorical(trackstats.id, levels=[ "DA_N2_BL21", "DA_N2_NGM",
-                                            "DA_CB_BL21", "DA_CB_NGM",
-                                            "DA_MT_BL21", "DA_MT_NGM",
+trackstats.id = categorical(trackstats.id, levels=[ "LD_N2_BL21", "LD_N2_NGM",
+                                            "LD_CB_BL21", "LD_CB_NGM",
+                                            "LD_MT_BL21", "LD_MT_NGM",
                                             "M9_N2_BL21", "M9_N2_NGM",
                                             "M9_CB_BL21", "M9_CB_NGM",
                                             "M9_MT_BL21", "M9_MT_NGM"])
 
 # separate speeds into two different dfs based on medium and bacteria
 buffertrackstats = filter(:medium => m -> m == "M9", trackstats)
-dopaminetrackstats = filter(:medium => m -> m == "DA", trackstats)
+ldopatrackstats = filter(:medium => m -> m == "LD", trackstats)
 
 # add id level codes to each df and reassign values for scatter
 buffertrackstats.idlevel = levelcode.(buffertrackstats.id)
 buffertrackstats.idlevel = replace(buffertrackstats.idlevel, 7=>1.2, 8=>0.8, 9=>2.2, 10=>1.8, 11=>3.2, 12=>2.8)
-dopaminetrackstats.idlevel = levelcode.(dopaminetrackstats.id)
-dopaminetrackstats.idlevel = replace(dopaminetrackstats.idlevel, 1=>1.2, 2=>0.8, 3=>2.2, 4=>1.8, 5=>3.2, 6=>2.8)
+ldopatrackstats.idlevel = levelcode.(ldopatrackstats.id)
+ldopatrackstats.idlevel = replace(ldopatrackstats.idlevel, 1=>1.2, 2=>0.8, 3=>2.2, 4=>1.8, 5=>3.2, 6=>2.8)
 
-# split buffer and dopamine DFs by bactera in order to assign colors
+# split buffer and ldopa DFs by bactera in order to assign colors
 bufferno = filter(:bacteria => b -> b == "NGM", buffertrackstats)
 bufferyes = filter(:bacteria => b -> b == "BL21", buffertrackstats)
-dopamineno = filter(:bacteria => b -> b == "NGM", dopaminetrackstats)
-dopamineyes = filter(:bacteria => b -> b == "BL21", dopaminetrackstats)
+ldopano = filter(:bacteria => b -> b == "NGM", ldopatrackstats)
+ldopayes = filter(:bacteria => b -> b == "BL21", ldopatrackstats)
 
 
 
@@ -109,7 +109,7 @@ errorbars!(ax4a, errorpos, bufferspeedstats.meanofmeanspeed, bufferspeedstats.se
 
 ax4b = Axis(
     fig4[1,2],
-    title = "Dopamine",
+    title = "L-DOPA",
     titlesize = 20,
     xlabel = "Worm strain",
     xticks = (1:3, ["wild type", "cat-2 CB", "cat-2 MT"]),
@@ -123,14 +123,14 @@ ax4b = Axis(
     rightspinecolor = "#5aaa46",
 )
 
-dodge = levelcode.(dopaminespeedstats.bacteria)
+dodge = levelcode.(ldopaspeedstats.bacteria)
 
-barplot!(ax4b, levelcode.(dopaminespeedstats.worm), dopaminespeedstats.meanofmeanspeed, dodge = dodge, color = map(d->d==1 ? "#bbdaef" : "#efafcb", dodge))
+barplot!(ax4b, levelcode.(ldopaspeedstats.worm), ldopaspeedstats.meanofmeanspeed, dodge = dodge, color = map(d->d==1 ? "#bbdaef" : "#efafcb", dodge))
 
-scatter!(ax4b, dopamineno.idlevel .+ rand(-0.1:0.01:0.1, length(dopamineno.idlevel)), dopamineno.meanspeed, color = "#7ca4d7", markersize = 5)
-scatter!(ax4b, dopamineyes.idlevel .+ rand(-0.1:0.01:0.1, length(dopamineyes.idlevel)), dopamineyes.meanspeed, color = "#d679a2", markersize = 5)
+scatter!(ax4b, ldopano.idlevel .+ rand(-0.1:0.01:0.1, length(ldopano.idlevel)), ldopano.meanspeed, color = "#7ca4d7", markersize = 5)
+scatter!(ax4b, ldopayes.idlevel .+ rand(-0.1:0.01:0.1, length(ldopayes.idlevel)), ldopayes.meanspeed, color = "#d679a2", markersize = 5)
 
-errorbars!(ax4b, errorpos, dopaminespeedstats.meanofmeanspeed, dopaminespeedstats.semofmeanspeed, linewidth = 2)
+errorbars!(ax4b, errorpos, ldopaspeedstats.meanofmeanspeed, ldopaspeedstats.semofmeanspeed, linewidth = 2)
 
 linkyaxes!(ax4a, ax4b)
 

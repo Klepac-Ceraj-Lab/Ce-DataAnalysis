@@ -1,10 +1,12 @@
+# PLOTS OF BASAL SLOWING RESPONSE
+
 using DataFrames
 using CSV
 using CategoricalArrays
 using GLMakie
-using CeDataAnalysis
 using Statistics
 using StatsBase
+using Distributions
 
 
 
@@ -15,12 +17,12 @@ speeds = DataFrame(CSV.File(joinpath(experimentdir, "speeds.csv")))
 
 # CALCULATE SUMMARY STATS BY FIRST CALCULATING SUMMARY STATS OF EACH TRACK
 # individual track stats
-tracks = groupby(speeds, [:id, :track])
+tracks = groupby(speeds, [:experiment, :id, :track])
 trackstats = combine(tracks, :speed => mean => :meanspeed)
 
 # condition stats from individual stats 
 conditions = groupby(trackstats, [:id])
-speedstats = combine(conditions, :meanspeed => mean => :meanofmeanspeed, :meanspeed => sem => :semofmeanspeed, :track => length => :n)
+speedstats = combine(conditions, :meanspeed => mean => :meanofmeanspeed, :meanspeed => sem => :semofmeanspeed, :meanspeed => std => :stdofmeanspeed, :track => length => :n)
 # legnth of each DF is # tracks, which = sample size
 
 
@@ -72,9 +74,9 @@ dopamineyes = filter(:bacteria => b -> b == "BL21", dopaminetrackstats)
 
 
 
-# PLOT
+# PLOTS WITH JITTERED DOT PLOT
 
-# mean ± SEM w jitter dot plot
+# barplot w jitter dot plot
 
 # define error bars at middle of each dodged bar
 errorpos = [1.2, 0.8, 2.2, 1.8, 3.2, 2.8]

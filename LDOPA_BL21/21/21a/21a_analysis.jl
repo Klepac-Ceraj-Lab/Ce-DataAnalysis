@@ -6,20 +6,20 @@ using CSV
 
 # CREATE DATAFRAME OF FILE NUMBERS AND IDS
 files = DataFrame()
-files.num = 5:45
+files.num = 185:228
 files.id = [
-    fill("DA_N2_BL21", length(5:7));
-    fill("DA_N2_NGM", length(8:11));
-    fill("DA_CB_BL21", length(12:14));
-    fill("DA_CB_NGM", length(15:18));
-    fill("DA_MT_BL21", length(19:21));
-    fill("DA_MT_NGM", length(22:24));
-    fill("M9_N2_BL21", length(25:28));
-    fill("M9_N2_NGM", length(29:32));
-    fill("M9_CB_BL21", length(33:36));
-    fill("M9_CB_NGM", length(37:38));
-    fill("M9_MT_BL21", length(39:42));
-    fill("M9_MT_NGM", length(43:45))
+    fill("LD_N2_BL21", length(185:187));
+    fill("LD_N2_NGM", length(188:192));
+    fill("LD_CB_BL21", length(193:195));
+    fill("LD_CB_NGM", length(196:198));
+    fill("LD_MT_BL21", length(199:202));
+    fill("LD_MT_NGM", length(203:206));
+    fill("M9_N2_BL21", length(207:209));
+    fill("M9_N2_NGM", length(210:212));
+    fill("M9_CB_BL21", length(213:215));
+    fill("M9_CB_NGM", length(216:219));
+    fill("M9_MT_BL21", length(220:224));
+    fill("M9_MT_NGM", length(225:228))
 ]
 
 
@@ -51,13 +51,6 @@ speed!(data)
 # AVERAGE SPEED MEASUREMENTS ACROSS 5 SEC (AVERAGE OF 25 MEASUREMENTS)
 speedperfive = averageoverfive(data)
 
-# set scale incorrectly in WormLab --> multiply each value by 10 to get correct scale
-for row in eachrow(speedperfive)
-    speedperfive.correctspeed = speedperfive.speed * 10
-end
-
-select!(speedperfive, Not([:speed]))
-rename!(speedperfive,:correctspeed => :speed)
 
 
 # SAVE FINAL DATAFRAME
