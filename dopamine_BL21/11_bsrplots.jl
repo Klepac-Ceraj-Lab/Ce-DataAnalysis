@@ -18,7 +18,10 @@ speeds = DataFrame(CSV.File(joinpath(experimentdir, "speeds.csv")))
 # CALCULATE SUMMARY STATS BY FIRST CALCULATING SUMMARY STATS OF EACH TRACK
 # individual track stats
 tracks = groupby(speeds, [:experiment, :id, :track])
-trackstats = combine(tracks, :speed => mean => :meanspeed)
+trackstats = combine(tracks, :speed => mean => :meanspeed, :track => length => :n) # add legnth of each track (# data points)
+
+# data point = speed/5s --> only keep tracks w > 6pts ie. more than 30s
+filter!(row -> row.n > 6, trackstats)
 
 # condition stats from individual stats 
 conditions = groupby(trackstats, [:id])
@@ -74,9 +77,9 @@ dopamineyes = filter(:bacteria => b -> b == "BL21", dopaminetrackstats)
 
 
 
-# PLOTS WITH JITTERED DOT PLOT
+# PLOTS
 
-# barplot w jitter dot plot
+# MEAN ± SEM W JITTER DOT PLOT (DOT = TRACK MEAN) (ALL TRACKS)
 
 # define error bars at middle of each dodged bar
 errorpos = [1.2, 0.8, 2.2, 1.8, 3.2, 2.8]
@@ -150,3 +153,80 @@ Legend(fig4[2, :],
     titleposition = :left)
 
 save(joinpath(experimentdir, "fig04.png"), fig4)
+
+
+
+# MEAN ± SEM W JITTER DOT PLOT (DOT = TRACK MEAN) (ONLY TRACKS > 30S)
+
+# define error bars at middle of each dodged bar
+errorpos = [1.2, 0.8, 2.2, 1.8, 3.2, 2.8]
+
+fig6 = Figure(
+)
+
+ax6a = Axis(
+    fig6[1,1],
+    title = "Buffer",
+    titlesize = 20,
+    xlabel = "Worm strain",
+    xticks = (1:3, ["wild type", "cat-2 CB", "cat-2 MT"]),
+    xlabelfont = "TeX Gyre Heros Makie Bold",
+    ylabel = "Average speed (µm/sec)",
+    ylabelfont = "TeX Gyre Heros Makie Bold",
+    titlecolor = "#825ca5",
+    topspinecolor = "#825ca5",
+    bottomspinecolor = "#825ca5",
+    leftspinecolor = "#825ca5",
+    rightspinecolor = "#825ca5",
+)
+
+dodge = levelcode.(bufferspeedstats.bacteria)
+
+barplot!(ax6a, levelcode.(bufferspeedstats.worm), bufferspeedstats.meanofmeanspeed, dodge = dodge, color = map(d->d==1 ? "#bbdaef" : "#efafcb", dodge))
+
+scatter!(ax6a, bufferno.idlevel .+ rand(-0.1:0.01:0.1, length(bufferno.idlevel)), bufferno.meanspeed, color = "#7ca4d7", markersize = 5)
+scatter!(ax6a, bufferyes.idlevel .+ rand(-0.1:0.01:0.1, length(bufferyes.idlevel)), bufferyes.meanspeed, color = "#d679a2", markersize = 5)
+
+errorbars!(ax6a, errorpos, bufferspeedstats.meanofmeanspeed, bufferspeedstats.semofmeanspeed, linewidth = 2)
+
+ax6b = Axis(
+    fig6[1,2],
+    title = "Dopamine",
+    titlesize = 20,
+    xlabel = "Worm strain",
+    xticks = (1:3, ["wild type", "cat-2 CB", "cat-2 MT"]),
+    xlabelfont = "TeX Gyre Heros Makie Bold",
+    ylabel = "Average speed (µm/sec)",
+    ylabelfont = "TeX Gyre Heros Makie Bold",
+    titlecolor = "#5aaa46",
+    topspinecolor = "#5aaa46",
+    bottomspinecolor = "#5aaa46",
+    leftspinecolor = "#5aaa46",
+    rightspinecolor = "#5aaa46",
+)
+
+dodge = levelcode.(dopaminespeedstats.bacteria)
+
+barplot!(ax6b, levelcode.(dopaminespeedstats.worm), dopaminespeedstats.meanofmeanspeed, dodge = dodge, color = map(d->d==1 ? "#bbdaef" : "#efafcb", dodge))
+
+scatter!(ax6b, dopamineno.idlevel .+ rand(-0.1:0.01:0.1, length(dopamineno.idlevel)), dopamineno.meanspeed, color = "#7ca4d7", markersize = 5)
+scatter!(ax6b, dopamineyes.idlevel .+ rand(-0.1:0.01:0.1, length(dopamineyes.idlevel)), dopamineyes.meanspeed, color = "#d679a2", markersize = 5)
+
+errorbars!(ax6b, errorpos, dopaminespeedstats.meanofmeanspeed, dopaminespeedstats.semofmeanspeed, linewidth = 2)
+
+linkyaxes!(ax6a, ax6b)
+
+hideydecorations!(ax6b, grid = false)
+
+
+elem_1 = [PolyElement(color = "#bbdaef")]
+elem_2 = [PolyElement(color = "#efafcb")]
+
+Legend(fig6[2, :],
+    [elem_1, elem_2],
+    ["No", "Yes"],
+    "Bacteria Presence",
+    orientation = :horizontal,
+    titleposition = :left)
+
+save(joinpath(experimentdir, "fig06.png"), fig6)
