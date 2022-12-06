@@ -26,8 +26,14 @@ function load_tracks!(existingdf, file, id)
     ntracks = ncol(tracks) ÷ 2 # count every pair of columns (this is integer division, so the answer stays Int)
     
     for tr in 1:ntracks
-        x = collect(skipmissing(tracks[!, 2*tr-1]))
-        y = collect(skipmissing(tracks[!, 2*tr]))
+        x = tracks[!, 2*tr-1]
+        y = tracks[!, 2*tr]
+
+        start_idx = findfirst(!ismissing, x) # get first non-missing
+        end_idx = lastindex(x) - findfirst(!ismissing, reverse(x)) + 1 # get last non-missing
+
+        x = x[start_idx:end_idx] # truncate beginning and end missing values, but leave internal
+        y = y[start_idx:end_idx]
         
         if isempty(existingdf) # if there is no data
             tracknum = 1 # start from 1
@@ -52,8 +58,11 @@ end
 
 # CALCULATE DISTANCE FROM POSITION (µm/0.2sec)
 function distance!(df)
+    flag = false
     df.distance = map(1:nrow(df)) do ri 
-        if ri == 1 || df.id[ri] != df.id[ri-1] || df.track[ri] != df.track[ri-1] # if first row in dataframe or condition (id) or track
+        if ri == 1 || # if first row in dataframe
+           df.id[ri] != df.id[ri-1] || df.track[ri] != df.track[ri-1] || # or condition (id) or track
+           ismissing(df.xpos[ri-1]) || ismissing(df.xpos[ri]) # either position is missing
             return missing # don't calculate distance
         else # calculate distance between point in row to point in previous row
             return euclidean((df.xpos[ri-1], df.ypos[ri-1]), (df.xpos[ri], df.ypos[ri]))
