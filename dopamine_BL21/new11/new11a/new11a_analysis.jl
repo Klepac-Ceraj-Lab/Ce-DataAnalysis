@@ -37,3 +37,31 @@ positionsdir = joinpath(experimentdir, "data", "Position")
 for row in eachrow(files)
     load_tracks!(alldata, joinpath(positionsdir, string(row.num, "Position.csv")), row.id)
 end
+
+# TAKE EVERY 5 POSITION MEASUREMENTS OF EACH TRACK
+alltracks = groupby(alldata, [:id, :track]) # group df by condition id and track
+data = combine(groupby(alldata, [:id, :track]), x->x[5:5:end, :]) # filter out every fifth row of each grouped df
+
+# CALCULATE DISTANCE FROM POSITION (µm/0.2sec)
+distance!(data)
+
+# CALCULATE SPEED FROM DISTANCE
+speed!(data)
+
+# ONLY KEEP ID, TRACK, AND SPEED COLUMNS
+select!(data, [:id, :track, :speed])
+
+
+# set scale incorrectly in WormLab --> multiply each value by 10 to get correct scale
+for row in eachrow(data)
+    data.correctspeed = data.speed * 10
+end
+
+select!(data, Not([:speed]))
+rename!(data,:correctspeed => :speed)
+
+
+# SAVE FINAL DATAFRAME
+speedscsv = joinpath(experimentdir, "speeds.csv")
+
+CSV.write(speedscsv, data)

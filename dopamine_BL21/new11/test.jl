@@ -41,3 +41,13 @@ for tr in 1:ntracks
         end
 
 existingdf
+
+alldata = existingdf
+
+alltracks = groupby(alldata, [:id, :track]) # group df by condition id and track
+data = combine(groupby(alldata, [:id, :track]), x->x[5:5:end, :]) # filter out every fifth row of each grouped df
+
+
+distance!(data)
+
+speed!(data)
