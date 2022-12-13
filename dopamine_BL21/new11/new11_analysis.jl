@@ -10,13 +10,13 @@ experimentdir = @__DIR__
 speedsa = DataFrame(CSV.File(joinpath(experimentdir, "new11a", "speeds.csv")))
 speedsa.experiment = fill(1, length(speedsa.id)) # add experiment column to df
 
-speedsb = DataFrame(CSV.File("./dopamine_Bl21/11/11b/speeds.csv"))
+speedsb = DataFrame(CSV.File(joinpath(experimentdir, "new11b", "speeds.csv")))
 speedsb.experiment = fill(2, length(speedsb.id))
 
-speedsc = DataFrame(CSV.File("./dopamine_Bl21/11/11d/speeds.csv"))
-speedsc.experiment = fill(3, length(speedsc.id))
+speedsd = DataFrame(CSV.File(joinpath(experimentdir, "new11d", "speeds.csv")))
+speedsd.experiment = fill(3, length(speedsd.id))
 
-speeds = vcat(speedsa, speedsb, speedsc)
+speeds = vcat(speedsa, speedsb, speedsd)
 
 
 
