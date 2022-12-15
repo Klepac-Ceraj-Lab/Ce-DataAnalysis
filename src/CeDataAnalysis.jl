@@ -28,13 +28,13 @@ function load_tracks!(existingdf, file, id)
     for tr in 1:ntracks
         x = tracks[!, 2*tr-1]
         y = tracks[!, 2*tr]
-
+        
         start_idx = findfirst(!ismissing, x) # get first non-missing
-        end_idx = lastindex(x) - findfirst(!ismissing, reverse(x)) + 1 # get last non-missing
-
+        end_idx = findlast(!ismissing, x) # get last non-missing
+           
         x = x[start_idx:end_idx] # truncate beginning and end missing values, but leave internal
         y = y[start_idx:end_idx]
-        
+            
         if isempty(existingdf) # if there is no data
             tracknum = 1 # start from 1
         elseif id == last(existingdf.id) # if the condition is the same as the last
@@ -42,14 +42,14 @@ function load_tracks!(existingdf, file, id)
         else # if the condition is not the same
             tracknum = 1 # start from 1
         end # assign appropriate track number
-    
+        
         append!(existingdf, DataFrame(
             id = fill(id, length(x)),
             track = fill(tracknum, length(x)),
             xpos  = x,
             ypos  = y)
         ) # add x y coordinates positions of each track to existingdf
-    end
+            end
     
     return existingdf
 end
