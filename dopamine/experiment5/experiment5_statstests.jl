@@ -143,7 +143,11 @@ ftest(mwb.model, mwb_int.model)
 # [2]   13     7  2375077.8791  -135783.9365  0.2954  0.0403  5.0065  <1e-04
 # ──────────────────────────────────────────────────────────────────────────
 
-lm(@formula(meanspeed ~ worm*bacteria), subset(trackstats, :medium=>ByRow(!=("DA")))) # just buffer
+
+
+# filtering on specific variables, testing interaction between the other variables
+
+lm(@formula(meanspeed ~ worm*bacteria), subset(trackstats, :medium=>ByRow(==("M9")))) # just buffer
 # meanspeed ~ 1 + worm + bacteria + worm & bacteria
 
 # Coefficients:
@@ -158,7 +162,7 @@ lm(@formula(meanspeed ~ worm*bacteria), subset(trackstats, :medium=>ByRow(!=("DA
 # worm: MT & bacteria: OP50    68.086      18.4956   3.68    0.0003    31.6927   104.479
 # ───────────────────────────────────────────────────────────────────────────────────────
 
-lm(@formula(meanspeed ~ worm*bacteria), subset(trackstats, :medium=>ByRow(!=("M9")))) # just dopamine
+lm(@formula(meanspeed ~ worm*bacteria), subset(trackstats, :medium=>ByRow(==("DA")))) # just dopamine
 # meanspeed ~ 1 + worm + bacteria + worm & bacteria
 
 # Coefficients:
@@ -172,6 +176,47 @@ lm(@formula(meanspeed ~ worm*bacteria), subset(trackstats, :medium=>ByRow(!=("M9
 # worm: CB & bacteria: OP50    20.7443     16.8004   1.23    0.2179   -12.3155   53.8041
 # worm: MT & bacteria: OP50    12.658      17.4657   0.72    0.4692   -21.7109   47.027
 # ───────────────────────────────────────────────────────────────────────────────────────
+
+lm(@formula(meanspeed ~ medium*bacteria), subset(trackstats, :worm=>ByRow(==("N2")))) # just N2
+# meanspeed ~ 1 + medium + bacteria + medium & bacteria
+
+# Coefficients:
+# ───────────────────────────────────────────────────────────────────────────────────────────
+#                                    Coef.  Std. Error      t  Pr(>|t|)  Lower 95%  Upper 95%
+# ───────────────────────────────────────────────────────────────────────────────────────────
+# (Intercept)                   269.204        9.88731  27.23    <1e-69   249.71     288.699
+# medium: DA                    -16.3228      14.3767   -1.14    0.2576   -44.6689    12.0232
+# bacteria: OP50               -100.851       12.7428   -7.91    <1e-12  -125.976    -75.7266
+# medium: DA & bacteria: OP50     0.379548    17.9484    0.02    0.9831   -35.0086    35.7677
+# ───────────────────────────────────────────────────────────────────────────────────────────
+
+lm(@formula(meanspeed ~ medium*bacteria), subset(trackstats, :worm=>ByRow(==("CB")))) # just CB
+# meanspeed ~ 1 + medium + bacteria + medium & bacteria
+
+# Coefficients:
+# ────────────────────────────────────────────────────────────────────────────────────────
+#                                 Coef.  Std. Error      t  Pr(>|t|)  Lower 95%  Upper 95%
+# ────────────────────────────────────────────────────────────────────────────────────────
+# (Intercept)                  205.086      10.6991  19.17    <1e-47   183.997   226.176
+# medium: DA                    15.0284     14.4266   1.04    0.2987   -13.408    43.4649
+# bacteria: OP50               -30.8484     13.0445  -2.36    0.0189   -56.5604   -5.13627
+# medium: DA & bacteria: OP50  -48.8789     18.1164  -2.70    0.0075   -84.5883  -13.1694
+# ────────────────────────────────────────────────────────────────────────────────────────
+
+lm(@formula(meanspeed ~ medium*bacteria), subset(trackstats, :worm=>ByRow(==("MT")))) # just MT
+# meanspeed ~ 1 + medium + bacteria + medium & bacteria
+
+# Coefficients:
+# ─────────────────────────────────────────────────────────────────────────────────────────
+#                                  Coef.  Std. Error      t  Pr(>|t|)  Lower 95%  Upper 95%
+# ─────────────────────────────────────────────────────────────────────────────────────────
+# (Intercept)                  224.008       9.02944  24.81    <1e-61   206.2     241.815
+# medium: DA                    -1.76902    13.3447   -0.13    0.8947   -28.0874   24.5494
+# bacteria: OP50               -32.7651     11.862    -2.76    0.0063   -56.1593   -9.37089
+# medium: DA & bacteria: OP50  -55.0484     17.4699   -3.15    0.0019   -89.5027  -20.5942
+# ─────────────────────────────────────────────────────────────────────────────────────────
+
+
 
 # interaction between all three vars
 three_int = lm(@formula(meanspeed ~ medium*worm*bacteria), trackstats)
