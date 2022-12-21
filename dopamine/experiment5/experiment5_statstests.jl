@@ -23,131 +23,10 @@ trackstats.bacteria = categorical(map(i-> split(i, '_')[3], trackstats.id), leve
 
 
 
-# # MODELING
+# MODELS / ANOVAS
 
-# # MODELS
-# one = lm(@formula(meanspeed ~ 1), trackstats) # we don't have any var affecting speed
-
-# m = lm(@formula(meanspeed ~ medium), trackstats) # speed depends only on medium (buffer vs. dopamine)
-# w = lm(@formula(meanspeed ~ worm), trackstats) # speed depends only on worm strain
-# b = lm(@formula(meanspeed ~ bacteria), trackstats) # speed depends only on bacteria presence
-
-# mw = lm(@formula(meanspeed ~ medium + worm), trackstats) # speed depends on medium and worm
-# wb = lm(@formula(meanspeed ~ worm + bacteria), trackstats) # speed depends on worm and bacteria
-# mb = lm(@formula(meanspeed ~ medium + bacteria), trackstats) # speed depends on medium and bacteria
-
-# mwb = lm(@formula(meanspeed ~ medium + worm + bacteria), trackstats) # speed depends on all three variables
-
-# wb_int_m = lm(@formula(meanspeed ~ worm*bacteria + medium), trackstats) # interaction between worm and bacteria
-
-# mwb_int = lm(@formula(meanspeed ~ medium*worm*bacteria), trackstats) # interaction between all variables
-
-
-
-# # F TESTS
-# # ftest = is fit of second model better than fit of first model
-
-# # Does bacteria affect speed, also separating by medium?
-# ftest(mw.model, mwb.model)
-# # F-test: 2 models fitted on 625 observations
-# # ────────────────────────────────────────────────────────────────────────────
-# #      DOF  ΔDOF           SSR          ΔSSR      R²     ΔR²        F*   p(>F)
-# # ────────────────────────────────────────────────────────────────────────────
-# # [1]    5        3257210.6688                0.0337                          
-# # [2]    6     1  2510861.8156  -746348.8531  0.2551  0.2214  184.2938  <1e-36
-# # ────────────────────────────────────────────────────────────────────────────
-
-# # Does bacteria affect speed dependent on worm, also separating by medium?
-# ftest(mw.model, wb_int_m.model)
-# # F-test: 2 models fitted on 625 observations
-# # ───────────────────────────────────────────────────────────────────────────
-# #      DOF  ΔDOF           SSR          ΔSSR      R²     ΔR²       F*   p(>F)
-# # ───────────────────────────────────────────────────────────────────────────
-# # [1]    5        3257210.6688                0.0337                         
-# # [2]    8     3  2452259.7245  -804950.9442  0.2725  0.2388  67.6192  <1e-37
-# # ───────────────────────────────────────────────────────────────────────────
-
-# # Does bacteria affect speed dependent on worm and medium?
-# ftest(one.model, mwb_int.model)
-# # F-test: 2 models fitted on 625 observations
-# # ───────────────────────────────────────────────────────────────────────────
-# #      DOF  ΔDOF           SSR          ΔSSR      R²     ΔR²       F*   p(>F)
-# # ───────────────────────────────────────────────────────────────────────────
-# # [1]    2        3370821.8383                0.0000                         
-# # [2]   13    11  2375077.8791  -995743.9592  0.2954  0.2954  23.3635  <1e-39
-# # ───────────────────────────────────────────────────────────────────────────
-
-# # Is speed dependent on an interactions among all variables?
-# ftest(mwb.model, mwb_int.model)
-# # F-test: 2 models fitted on 625 observations
-# # ──────────────────────────────────────────────────────────────────────────
-# #      DOF  ΔDOF           SSR          ΔSSR      R²     ΔR²      F*   p(>F)
-# # ──────────────────────────────────────────────────────────────────────────
-# # [1]    6        2510861.8156                0.2551                        
-# # [2]   13     7  2375077.8791  -135783.9365  0.2954  0.0403  5.0065  <1e-04
-# # ──────────────────────────────────────────────────────────────────────────
-
-
-
-# ANOVAS
-
-# interaction between medium and worm
-mw = lm(@formula(meanspeed ~ medium + worm), trackstats)
-mw_int = lm(@formula(meanspeed ~ medium + worm + medium*worm), trackstats)
-
-ftest(mw.model, mw_int.model)
-# F-test: 2 models fitted on 625 observations
-# ─────────────────────────────────────────────────────────────────────────
-#      DOF  ΔDOF           SSR         ΔSSR      R²     ΔR²      F*   p(>F)
-# ─────────────────────────────────────────────────────────────────────────
-# [1]    5        3257210.6688               0.0337                        
-# [2]    7     2  3243550.4037  -13660.2651  0.0378  0.0041  1.3035  0.2723
-# ─────────────────────────────────────────────────────────────────────────
-
-# interaction between worm and bacteria 
-wb = lm(@formula(meanspeed ~ worm + bacteria), trackstats)
-wb_int = lm(@formula(meanspeed ~ worm + bacteria + worm*bacteria), trackstats)
-
-ftest(wb.model, wb_int.model)
-# F-test: 2 models fitted on 625 observations
-# ─────────────────────────────────────────────────────────────────────────
-#      DOF  ΔDOF           SSR         ΔSSR      R²     ΔR²      F*   p(>F)
-# ─────────────────────────────────────────────────────────────────────────
-# [1]    5        2592321.8552               0.2310                        
-# [2]    7     2  2525420.2672  -66901.5881  0.2508  0.0198  8.1990  0.0003
-# ─────────────────────────────────────────────────────────────────────────
-
-# interaction between worm and bacteria, also considering medium
-mwb = lm(@formula(meanspeed ~ medium + worm + bacteria), trackstats)
-wb_int_m = lm(@formula(meanspeed ~ medium + worm + bacteria + worm*bacteria), trackstats)
-
-ftest(mwb.model, wb_int_m.model)
-# F-test: 2 models fitted on 625 observations
-# ─────────────────────────────────────────────────────────────────────────
-#      DOF  ΔDOF           SSR         ΔSSR      R²     ΔR²      F*   p(>F)
-# ─────────────────────────────────────────────────────────────────────────
-# [1]    6        2510861.8156               0.2551                        
-# [2]    8     2  2452259.7245  -58602.0911  0.2725  0.0174  7.3842  0.0007
-# ─────────────────────────────────────────────────────────────────────────
-
-# interaction among all vars
-mwb = lm(@formula(meanspeed ~ medium + worm + bacteria), trackstats)
-mwb_int = lm(@formula(meanspeed ~ medium*worm*bacteria), trackstats)
-
-ftest(mwb.model, mwb_int.model)
-# F-test: 2 models fitted on 625 observations
-# ──────────────────────────────────────────────────────────────────────────
-#      DOF  ΔDOF           SSR          ΔSSR      R²     ΔR²      F*   p(>F)
-# ──────────────────────────────────────────────────────────────────────────
-# [1]    6        2510861.8156                0.2551                        
-# [2]   13     7  2375077.8791  -135783.9365  0.2954  0.0403  5.0065  <1e-04
-# ──────────────────────────────────────────────────────────────────────────
-
-
-
-# filtering on specific variables, testing interaction between the other variables
-
-lm(@formula(meanspeed ~ worm*bacteria), subset(trackstats, :medium=>ByRow(==("M9")))) # just buffer
+# comparing across strains for buffer medium
+lm(@formula(meanspeed ~ worm*bacteria), subset(trackstats, :medium=>ByRow(==("M9"))))
 # meanspeed ~ 1 + worm + bacteria + worm & bacteria
 
 # Coefficients:
@@ -162,7 +41,18 @@ lm(@formula(meanspeed ~ worm*bacteria), subset(trackstats, :medium=>ByRow(==("M9
 # worm: MT & bacteria: OP50    68.086      18.4956   3.68    0.0003    31.6927   104.479
 # ───────────────────────────────────────────────────────────────────────────────────────
 
-lm(@formula(meanspeed ~ worm*bacteria), subset(trackstats, :medium=>ByRow(==("DA")))) # just dopamine
+# CB on and off bacteria vs N2 on and off bacteria
+# ie. speed diff of CB vs speed diff of N2
+# p = 0.0002 --> significant difference, as expected
+
+# MT on and off bacteria vs N2 on and off bacteria
+# ie. speed diff of MT vs speed diff of N2
+# p = 0.0003 --> significant difference, as expected
+
+
+
+# comparing across strains for dopamine medium
+lm(@formula(meanspeed ~ worm*bacteria), subset(trackstats, :medium=>ByRow(==("DA"))))
 # meanspeed ~ 1 + worm + bacteria + worm & bacteria
 
 # Coefficients:
@@ -177,7 +67,18 @@ lm(@formula(meanspeed ~ worm*bacteria), subset(trackstats, :medium=>ByRow(==("DA
 # worm: MT & bacteria: OP50    12.658      17.4657   0.72    0.4692   -21.7109   47.027
 # ───────────────────────────────────────────────────────────────────────────────────────
 
-lm(@formula(meanspeed ~ medium*bacteria), subset(trackstats, :worm=>ByRow(==("N2")))) # just N2
+# CB on and off bacteria vs N2 on and off bacteria
+# ie. speed diff of CB vs speed diff of N2
+# p = 0.2179 --> not significant, as expected
+
+# MT on and off bacteria vs N2 on and off bacteria
+# ie. speed diff of MT vs speed diff of N2
+# p = 0.4692 --> not significant, as expected
+
+
+
+# comparing across mediums for N2 strain
+lm(@formula(meanspeed ~ medium*bacteria), subset(trackstats, :worm=>ByRow(==("N2"))))
 # meanspeed ~ 1 + medium + bacteria + medium & bacteria
 
 # Coefficients:
@@ -190,7 +91,14 @@ lm(@formula(meanspeed ~ medium*bacteria), subset(trackstats, :worm=>ByRow(==("N2
 # medium: DA & bacteria: OP50     0.379548    17.9484    0.02    0.9831   -35.0086    35.7677
 # ───────────────────────────────────────────────────────────────────────────────────────────
 
-lm(@formula(meanspeed ~ medium*bacteria), subset(trackstats, :worm=>ByRow(==("CB")))) # just CB
+# dopamine vs. buffer, bacteria vs. no bacteria
+# ie. speed diff of N2 w buffer vs. w dopamine
+# p = 0.9831 --> not significant, as expected
+
+
+
+# comparing across mediums for CB strain
+lm(@formula(meanspeed ~ medium*bacteria), subset(trackstats, :worm=>ByRow(==("CB"))))
 # meanspeed ~ 1 + medium + bacteria + medium & bacteria
 
 # Coefficients:
@@ -203,6 +111,13 @@ lm(@formula(meanspeed ~ medium*bacteria), subset(trackstats, :worm=>ByRow(==("CB
 # medium: DA & bacteria: OP50  -48.8789     18.1164  -2.70    0.0075   -84.5883  -13.1694
 # ────────────────────────────────────────────────────────────────────────────────────────
 
+# dopamine vs. buffer, bacteria vs. no bacteria
+# ie. speed diff of CB w buffer vs. w dopamine
+# p = 0.0075 --> significant, as expected
+
+
+
+# comparing across mediums for MT strain
 lm(@formula(meanspeed ~ medium*bacteria), subset(trackstats, :worm=>ByRow(==("MT")))) # just MT
 # meanspeed ~ 1 + medium + bacteria + medium & bacteria
 
@@ -215,6 +130,10 @@ lm(@formula(meanspeed ~ medium*bacteria), subset(trackstats, :worm=>ByRow(==("MT
 # bacteria: OP50               -32.7651     11.862    -2.76    0.0063   -56.1593   -9.37089
 # medium: DA & bacteria: OP50  -55.0484     17.4699   -3.15    0.0019   -89.5027  -20.5942
 # ─────────────────────────────────────────────────────────────────────────────────────────
+
+# dopamine vs. buffer, bacteria vs. no bacteria
+# ie. speed diff of MT w buffer vs. w dopamine
+# p = 0.0019 --> significant, as expected
 
 
 
