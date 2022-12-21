@@ -77,7 +77,7 @@ lm(@formula(meanspeed ~ worm*bacteria), subset(trackstats, :medium=>ByRow(==("DA
 
 # MT on and off bacteria vs N2 on and off bacteria
 # ie. speed diff of MT vs speed diff of N2
-# p = 0.0404 --> BARELY EXPECTED, KINDA EXPECTED?
+# p = 0.0404 --> BARELY SIGNIFICANT, KINDA EXPECTED?
 
 
 
