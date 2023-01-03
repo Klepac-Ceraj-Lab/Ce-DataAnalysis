@@ -95,7 +95,7 @@ lm(@formula(meanspeed ~ medium*bacteria), subset(trackstats, :worm=>ByRow(==("N2
 # medium: DA & bacteria: BL21    53.0266     17.7668    2.98    0.0036     17.735    88.3182
 # ──────────────────────────────────────────────────────────────────────────────────────────
 
-# dopamine vs. buffer, bacteria vs. no bacteria
+# N2 on and off bacteria on buffer vs. dopamine
 # ie. speed diff of N2 w buffer vs. w dopamine
 # p = 0.0036 --> SIGNIFICANT, NOT AS EXPECTED
 
@@ -115,7 +115,7 @@ lm(@formula(meanspeed ~ medium*bacteria), subset(trackstats, :worm=>ByRow(==("CB
 # medium: DA & bacteria: BL21  -99.1684     16.1558   -6.14    <1e-07  -131.26    -67.0768
 # ─────────────────────────────────────────────────────────────────────────────────────────
 
-# dopamine vs. buffer, bacteria vs. no bacteria
+# CB on and off bacteria on buffer vs. dopamine
 # ie. speed diff of CB w buffer vs. w dopamine
 # p = <1e-07 --> significant, as expected
 
@@ -135,6 +135,6 @@ lm(@formula(meanspeed ~ medium*bacteria), subset(trackstats, :worm=>ByRow(==("MT
 # medium: DA & bacteria: BL21  -36.7565     22.4289  -1.64    0.1048   -81.3293    7.81618
 # ────────────────────────────────────────────────────────────────────────────────────────
 
-# dopamine vs. buffer, bacteria vs. no bacteria
+# MT on and off bacteria on buffer vs. dopamine
 # ie. speed diff of MT w buffer vs. w dopamine
 # p = 0.1048 --> NOT SIGNIFICANT, NOT AS EXPECTED
