@@ -138,3 +138,13 @@ lm(@formula(meanspeed ~ medium*bacteria), subset(trackstats, :worm=>ByRow(==("MT
 # MT on and off bacteria on buffer vs. dopamine
 # ie. speed diff of MT w buffer vs. w dopamine
 # p = 0.1048 --> NOT SIGNIFICANT, NOT AS EXPECTED
+
+
+
+# save CSVs for each subset
+CSV.write(joinpath(experimentdir, "alltracks_data.csv"), trackstats)
+CSV.write(joinpath(experimentdir, "M9_data.csv"), select(subset(trackstats, :medium=>ByRow(==("M9"))), "meanspeed", "worm", "bacteria"))
+CSV.write(joinpath(experimentdir, "DA_data.csv"), select(subset(trackstats, :medium=>ByRow(==("DA"))), "meanspeed", "worm", "bacteria"))
+CSV.write(joinpath(experimentdir, "N2_data.csv"), select(subset(trackstats, :worm=>ByRow(==("N2"))), "meanspeed", "medium", "bacteria"))
+CSV.write(joinpath(experimentdir, "CB_data.csv"), select(subset(trackstats, :worm=>ByRow(==("CB"))), "meanspeed", "medium", "bacteria"))
+CSV.write(joinpath(experimentdir, "MT_data.csv"), select(subset(trackstats, :worm=>ByRow(==("MT"))), "meanspeed", "medium", "bacteria"))
