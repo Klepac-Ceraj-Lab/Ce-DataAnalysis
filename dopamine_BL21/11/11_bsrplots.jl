@@ -388,6 +388,8 @@ ax8a = Axis(
     rightspinecolor = "#825ca5",
 )
 
+ylims!(0, 500)
+
 dodge = levelcode.(bufferspeedstats.bacteria)
 
 barplot!(ax8a, levelcode.(bufferspeedstats.worm), bufferspeedstats.meanofmeanspeed, dodge = dodge, color = map(d->d==1 ? "#bbdaef" : "#efafcb", dodge))
@@ -413,6 +415,8 @@ ax8b = Axis(
     rightspinecolor = "#5aaa46",
 )
 
+ylims!(0, 500)
+
 dodge = levelcode.(dopaminespeedstats.bacteria)
 
 barplot!(ax8b, levelcode.(dopaminespeedstats.worm), dopaminespeedstats.meanofmeanspeed, dodge = dodge, color = map(d->d==1 ? "#bbdaef" : "#efafcb", dodge))
@@ -422,7 +426,7 @@ scatter!(ax8b, dopamineyes.idlevel .+ rand(-0.1:0.01:0.1, length(dopamineyes.idl
 
 errorbars!(ax8b, errorpos, dopaminespeedstats.meanofmeanspeed, dopaminespeedstats.semofmeanspeed, linewidth = 2)
 
-linkyaxes!(ax8a, ax8b)
+# linkyaxes!(ax8a, ax8b)
 
 hideydecorations!(ax8b, grid = false)
 
