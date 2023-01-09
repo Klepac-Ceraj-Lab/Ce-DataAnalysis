@@ -154,7 +154,7 @@ save(joinpath(experimentdir, "fig07.png"), fig7)
 
 
 
-# FIG 7 but with taller y axes
+# FIG 7 with diff formatting
 
 # define error bars at middle of each dodged bar
 errorpos = [1.2, 0.8, 2.2, 1.8, 3.2, 2.8]
@@ -172,13 +172,13 @@ ax8a = Axis(
     ylabel = "Average speed (µm/sec)",
     ylabelfont = "TeX Gyre Heros Makie Bold",
     titlecolor = "#825ca5",
-    topspinecolor = "#825ca5",
+    topspinecolor = "#FFFFFF",
     bottomspinecolor = "#825ca5",
-    leftspinecolor = "#825ca5",
-    rightspinecolor = "#825ca5",
+    rightspinecolor = "#FFFFFF",
 )
 
 ylims!(0, 500)
+hidedecorations!(ax8a, label = false, ticklabels = false, ticks = false)
 
 dodge = levelcode.(bufferspeedstats.bacteria)
 
@@ -199,13 +199,14 @@ ax8b = Axis(
     ylabel = "Average speed (µm/sec)",
     ylabelfont = "TeX Gyre Heros Makie Bold",
     titlecolor = "#5aaa46",
-    topspinecolor = "#5aaa46",
+    topspinecolor = "#FFFFFF",
     bottomspinecolor = "#5aaa46",
-    leftspinecolor = "#5aaa46",
-    rightspinecolor = "#5aaa46",
+    leftspinecolor = "#FFFFFF",
+    rightspinecolor = "#FFFFFF",
 )
 
 ylims!(0, 500)
+hidedecorations!(ax8b, label = false, ticklabels = false, ticks = false)
 
 dodge = levelcode.(ldopaspeedstats.bacteria)
 
@@ -215,8 +216,6 @@ scatter!(ax8b, ldopano.idlevel .+ rand(-0.1:0.01:0.1, length(ldopano.idlevel)), 
 scatter!(ax8b, ldopayes.idlevel .+ rand(-0.1:0.01:0.1, length(ldopayes.idlevel)), ldopayes.meanspeed, color = "#d679a2", markersize = 5)
 
 errorbars!(ax8b, errorpos, ldopaspeedstats.meanofmeanspeed, ldopaspeedstats.semofmeanspeed, linewidth = 2)
-
-# linkyaxes!(ax8a, ax8b)
 
 hideydecorations!(ax8b, grid = false)
 
