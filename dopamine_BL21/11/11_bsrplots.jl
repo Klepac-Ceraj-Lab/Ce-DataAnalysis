@@ -52,6 +52,7 @@ dopaminespeedstats = filter(:medium => m -> m == "DA", speedstats)
 
 # dot plot of average speeds of each track in each condition needs trackstats
 trackstats.medium = categorical(map(i-> split(i, '_')[1], trackstats.id), levels = ["M9", "DA"])
+trackstats.worm = categorical(map(i-> split(i, '_')[2], trackstats.id), levels = ["N2", "CB", "MT"])
 trackstats.bacteria = categorical(map(i-> split(i, '_')[3], trackstats.id), levels = ["NGM", "BL21"])
 trackstats.id = categorical(trackstats.id, levels=[ "DA_N2_BL21", "DA_N2_NGM",
                                             "DA_CB_BL21", "DA_CB_NGM",
@@ -447,8 +448,13 @@ save(joinpath(experimentdir, "fig08.png"), fig8)
 
 # FIG 8 simplified --- only N2 and CB, only bars no dots
 
-filter!(row -> (row.worm == "N2" || row.worm == "CB"),  bufferspeedstats)
-filter!(row -> (row.worm == "N2" || row.worm == "CB"),  dopaminespeedstats)
+# filter out MT
+filter!(row -> (row.worm != "MT"),  bufferspeedstats)
+filter!(row -> (row.worm != "MT"),  dopaminespeedstats)
+filter!(row -> (row.worm != "MT"),  bufferno)
+filter!(row -> (row.worm != "MT"),  bufferyes)
+filter!(row -> (row.worm != "MT"),  dopamineno)
+filter!(row -> (row.worm != "MT"),  dopamineyes)
 
 
 # define error bars at middle of each dodged bar
@@ -478,8 +484,10 @@ hidedecorations!(ax9a, label = false, ticklabels = false, ticks = false)
 dodge = levelcode.(bufferspeedstats.bacteria)
 
 barplot!(ax9a, levelcode.(bufferspeedstats.worm), bufferspeedstats.meanofmeanspeed, dodge = dodge, color = map(d->d==1 ? "#bbdaef" : "#efafcb", dodge))
-
 errorbars!(ax9a, errorpos, bufferspeedstats.meanofmeanspeed, bufferspeedstats.semofmeanspeed, linewidth = 2)
+
+scatter!(ax9a, bufferno.idlevel .+ rand(-0.1:0.01:0.1, length(bufferno.idlevel)), bufferno.meanspeed, color = "#7ca4d7", markersize = 5)
+scatter!(ax9a, bufferyes.idlevel .+ rand(-0.1:0.01:0.1, length(bufferyes.idlevel)), bufferyes.meanspeed, color = "#d679a2", markersize = 5)
 
 ax9b = Axis(
     fig9[1,2],
@@ -503,8 +511,10 @@ hidedecorations!(ax9b, label = false, ticklabels = false, ticks = false)
 dodge = levelcode.(dopaminespeedstats.bacteria)
 
 barplot!(ax9b, levelcode.(dopaminespeedstats.worm), dopaminespeedstats.meanofmeanspeed, dodge = dodge, color = map(d->d==1 ? "#bbdaef" : "#efafcb", dodge))
-
 errorbars!(ax9b, errorpos, dopaminespeedstats.meanofmeanspeed, dopaminespeedstats.semofmeanspeed, linewidth = 2)
+
+scatter!(ax9b, dopamineno.idlevel .+ rand(-0.1:0.01:0.1, length(dopamineno.idlevel)), dopamineno.meanspeed, color = "#7ca4d7", markersize = 5)
+scatter!(ax9b, dopamineyes.idlevel .+ rand(-0.1:0.01:0.1, length(dopamineyes.idlevel)), dopamineyes.meanspeed, color = "#d679a2", markersize = 5)
 
 hideydecorations!(ax9b, grid = false)
 
