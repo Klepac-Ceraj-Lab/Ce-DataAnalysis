@@ -141,6 +141,46 @@ lm(@formula(meanspeed ~ medium*bacteria), subset(trackstats, :worm=>ByRow(==("MT
 
 
 
+# comparing across mediums for WT and CB strain
+lm(@formula(meanspeed ~ medium*bacteria*worm), subset(trackstats, :worm=>ByRow(!=("MT"))))
+# meanspeed ~ 1 + medium + bacteria + worm + medium & bacteria + medium & worm + bacteria & worm + medium & bacteria & worm
+
+# Coefficients:
+# ─────────────────────────────────────────────────────────────────────────────────────────────────────
+#                                             Coef.  Std. Error       t  Pr(>|t|)  Lower 95%  Upper 95%
+# ─────────────────────────────────────────────────────────────────────────────────────────────────────
+# (Intercept)                              292.938      10.079    29.06    <1e-69   273.051    312.824
+# medium: DA                               -56.6264     13.3785   -4.23    <1e-04   -83.0233   -30.2294
+# bacteria: BL21                          -171.053      12.8102  -13.35    <1e-28  -196.329   -145.778
+# worm: CB                                 -45.5792     12.6347   -3.61    0.0004   -70.5085   -20.6499
+# medium: DA & bacteria: BL21               53.0266     17.0966    3.10    0.0022    19.2936    86.7596
+# medium: DA & worm: CB                     53.4451     17.3796    3.08    0.0024    19.1538    87.7365
+# bacteria: BL21 & worm: CB                149.003      17.8258    8.36    <1e-13   113.831    184.175
+# medium: DA & bacteria: BL21 & worm: CB  -152.195      23.9996   -6.34    <1e-08  -199.548   -104.842
+# ─────────────────────────────────────────────────────────────────────────────────────────────────────
+
+# p <1e-08 --> significant, as expected
+
+# comparing across mediums for WT and MT strain
+lm(@formula(meanspeed ~ medium*bacteria*worm), subset(trackstats, :worm=>ByRow(!=("CB"))))
+# meanspeed ~ 1 + medium + bacteria + worm + medium & bacteria + medium & worm + bacteria & worm + medium & bacteria & worm
+
+# Coefficients:
+# ──────────────────────────────────────────────────────────────────────────────────────────────────────
+#                                             Coef.  Std. Error       t  Pr(>|t|)   Lower 95%  Upper 95%
+# ──────────────────────────────────────────────────────────────────────────────────────────────────────
+# (Intercept)                              292.938      12.0038   24.40    <1e-58   269.25      316.625
+# medium: DA                               -56.6264     15.9335   -3.55    0.0005   -88.068     -25.1847
+# bacteria: BL21                          -171.053      15.2566  -11.21    <1e-21  -201.159    -140.947
+# worm: MT                                 -69.0725     15.7761   -4.38    <1e-04  -100.204     -37.9414
+# medium: DA & bacteria: BL21               53.0266     20.3616    2.60    0.0100    12.847      93.2062
+# medium: DA & worm: MT                     44.0299     21.4221    2.06    0.0413     1.75741    86.3023
+# bacteria: BL21 & worm: MT                123.34       21.1505    5.83    <1e-07    81.6034    165.076
+# medium: DA & bacteria: BL21 & worm: MT   -89.7831     28.6021   -3.14    0.0020  -146.224     -33.3424
+# ──────────────────────────────────────────────────────────────────────────────────────────────────────
+
+# p = 0.0020 --> significant, as expected
+
 # save CSVs for each subset
 CSV.write(joinpath(experimentdir, "alltracks_data.csv"), trackstats)
 CSV.write(joinpath(experimentdir, "M9_data.csv"), select(subset(trackstats, :medium=>ByRow(==("M9"))), "meanspeed", "worm", "bacteria"))
