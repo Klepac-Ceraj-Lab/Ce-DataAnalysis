@@ -21,7 +21,7 @@ tracks = groupby(speeds, [:experiment, :id, :track])
 trackstats = combine(tracks, :speed => mean => :meanspeed, :track => length => :n) # add legnth of each track (# data points)
 
 # data point = speed/5s --> only keep tracks w > 6pts ie. more than 30s
-# for Fig 07
+# for Fig 07 onwards
 filter!(row -> row.n > 6, trackstats)
 
 # condition stats from individual stats 
@@ -364,6 +364,7 @@ Legend(fig7[2, :],
 save(joinpath(experimentdir, "fig07.png"), fig7)
 
 
+
 # FIG 7 with diff formatting
 
 # define error bars at middle of each dodged bar
@@ -441,3 +442,81 @@ Legend(fig8[2, :],
     titleposition = :left)
 
 save(joinpath(experimentdir, "fig08.png"), fig8)
+
+
+
+# FIG 8 simplified --- only N2 and CB, only bars
+
+filter!(row -> (row.worm == "N2" || row.worm == "CB"),  bufferspeedstats)
+filter!(row -> (row.worm == "N2" || row.worm == "CB"),  dopaminespeedstats)
+
+
+# define error bars at middle of each dodged bar
+errorpos = [1.2, 0.8, 2.2, 1.8]
+
+fig9 = Figure(
+)
+
+ax9a = Axis(
+    fig9[1,1],
+    title = "Buffer",
+    titlesize = 20,
+    xlabel = "Worm strain",
+    xticks = (1:2, ["wild type", "cat-2"]),
+    xlabelfont = "TeX Gyre Heros Makie Bold",
+    ylabel = "Average speed (µm/sec)",
+    ylabelfont = "TeX Gyre Heros Makie Bold",
+    titlecolor = "#825ca5",
+    topspinecolor = "#FFFFFF",
+    bottomspinecolor = "#825ca5",
+    rightspinecolor = "#FFFFFF",
+)
+
+ylims!(0, 400)
+# hidedecorations!(ax9a, label = false, ticklabels = false, ticks = false)
+
+dodge = levelcode.(bufferspeedstats.bacteria)
+
+barplot!(ax9a, levelcode.(bufferspeedstats.worm), bufferspeedstats.meanofmeanspeed, dodge = dodge, color = map(d->d==1 ? "#bbdaef" : "#efafcb", dodge))
+
+errorbars!(ax9a, errorpos, bufferspeedstats.meanofmeanspeed, bufferspeedstats.semofmeanspeed, linewidth = 2)
+
+ax9b = Axis(
+    fig9[1,2],
+    title = "Dopamine",
+    titlesize = 20,
+    xlabel = "Worm strain",
+    xticks = (1:2, ["wild type", "cat-2"]),
+    xlabelfont = "TeX Gyre Heros Makie Bold",
+    ylabel = "Average speed (µm/sec)",
+    ylabelfont = "TeX Gyre Heros Makie Bold",
+    titlecolor = "#5aaa46",
+    topspinecolor = "#FFFFFF",
+    bottomspinecolor = "#5aaa46",
+    leftspinecolor = "#FFFFFF",
+    rightspinecolor = "#FFFFFF",
+)
+
+ylims!(0, 400)
+# hidedecorations!(ax9b, label = false, ticklabels = false, ticks = false)
+
+dodge = levelcode.(dopaminespeedstats.bacteria)
+
+barplot!(ax9b, levelcode.(dopaminespeedstats.worm), dopaminespeedstats.meanofmeanspeed, dodge = dodge, color = map(d->d==1 ? "#bbdaef" : "#efafcb", dodge))
+
+errorbars!(ax9b, errorpos, dopaminespeedstats.meanofmeanspeed, dopaminespeedstats.semofmeanspeed, linewidth = 2)
+
+hideydecorations!(ax9b, grid = false)
+
+
+elem_1 = [PolyElement(color = "#bbdaef")]
+elem_2 = [PolyElement(color = "#efafcb")]
+
+Legend(fig9[2, :],
+    [elem_1, elem_2],
+    ["No", "Yes"],
+    "Bacteria Presence",
+    orientation = :horizontal,
+    titleposition = :left)
+
+save(joinpath(experimentdir, "fig09.png"), fig9)
