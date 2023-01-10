@@ -231,3 +231,90 @@ Legend(fig8[2, :],
     titleposition = :left)
 
 save(joinpath(experimentdir, "fig08.png"), fig8)
+
+
+
+# FIG 8 simplified --- only N2 and CB, only bars no dots
+
+# filter out MT
+filter!(row -> (row.worm != "MT"),  bufferspeedstats)
+filter!(row -> (row.worm != "MT"),  ldopaspeedstats)
+filter!(row -> (row.worm != "MT"),  bufferno)
+filter!(row -> (row.worm != "MT"),  bufferyes)
+filter!(row -> (row.worm != "MT"),  ldopano)
+filter!(row -> (row.worm != "MT"),  ldopayes)
+
+
+# define error bars at middle of each dodged bar
+errorpos = [1.2, 0.8, 2.2, 1.8]
+
+fig9 = Figure(
+)
+
+ax9a = Axis(
+    fig9[1,1],
+    title = "Buffer",
+    titlesize = 20,
+    xlabel = "Worm strain",
+    xticks = (1:2, ["wild type", "cat-2"]),
+    xlabelfont = "TeX Gyre Heros Makie Bold",
+    ylabel = "Average speed (µm/sec)",
+    ylabelfont = "TeX Gyre Heros Makie Bold",
+    titlecolor = "#825ca5",
+    topspinecolor = "#FFFFFF",
+    bottomspinecolor = "#825ca5",
+    rightspinecolor = "#FFFFFF",
+)
+
+ylims!(0, 400)
+hidedecorations!(ax9a, label = false, ticklabels = false, ticks = false)
+
+dodge = levelcode.(bufferspeedstats.bacteria)
+
+barplot!(ax9a, levelcode.(bufferspeedstats.worm), bufferspeedstats.meanofmeanspeed, dodge = dodge, color = map(d->d==1 ? "#bbdaef" : "#efafcb", dodge))
+errorbars!(ax9a, errorpos, bufferspeedstats.meanofmeanspeed, bufferspeedstats.semofmeanspeed, linewidth = 2)
+
+scatter!(ax9a, bufferno.idlevel .+ rand(-0.1:0.01:0.1, length(bufferno.idlevel)), bufferno.meanspeed, color = "#7ca4d7", markersize = 5)
+scatter!(ax9a, bufferyes.idlevel .+ rand(-0.1:0.01:0.1, length(bufferyes.idlevel)), bufferyes.meanspeed, color = "#d679a2", markersize = 5)
+
+ax9b = Axis(
+    fig9[1,2],
+    title = "L-DOPA",
+    titlesize = 20,
+    xlabel = "Worm strain",
+    xticks = (1:2, ["wild type", "cat-2"]),
+    xlabelfont = "TeX Gyre Heros Makie Bold",
+    ylabel = "Average speed (µm/sec)",
+    ylabelfont = "TeX Gyre Heros Makie Bold",
+    titlecolor = "#5aaa46",
+    topspinecolor = "#FFFFFF",
+    bottomspinecolor = "#5aaa46",
+    leftspinecolor = "#FFFFFF",
+    rightspinecolor = "#FFFFFF",
+)
+
+ylims!(0, 400)
+hidedecorations!(ax9b, label = false, ticklabels = false, ticks = false)
+
+dodge = levelcode.(ldopaspeedstats.bacteria)
+
+barplot!(ax9b, levelcode.(ldopaspeedstats.worm), ldopaspeedstats.meanofmeanspeed, dodge = dodge, color = map(d->d==1 ? "#bbdaef" : "#efafcb", dodge))
+errorbars!(ax9b, errorpos, ldopaspeedstats.meanofmeanspeed, ldopaspeedstats.semofmeanspeed, linewidth = 2)
+
+scatter!(ax9b, ldopano.idlevel .+ rand(-0.1:0.01:0.1, length(ldopano.idlevel)), ldopano.meanspeed, color = "#7ca4d7", markersize = 5)
+scatter!(ax9b, ldopayes.idlevel .+ rand(-0.1:0.01:0.1, length(ldopayes.idlevel)), ldopayes.meanspeed, color = "#d679a2", markersize = 5)
+
+hideydecorations!(ax9b, grid = false)
+
+
+elem_1 = [PolyElement(color = "#bbdaef")]
+elem_2 = [PolyElement(color = "#efafcb")]
+
+Legend(fig9[2, :],
+    [elem_1, elem_2],
+    ["No", "Yes"],
+    "Bacteria Presence",
+    orientation = :horizontal,
+    titleposition = :left)
+
+save(joinpath(experimentdir, "fig09.png"), fig9)
