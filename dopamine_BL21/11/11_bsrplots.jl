@@ -445,7 +445,7 @@ save(joinpath(experimentdir, "fig08.png"), fig8)
 
 
 
-# FIG 8 simplified --- only N2 and CB, only bars
+# FIG 8 simplified --- only N2 and CB, only bars no dots
 
 filter!(row -> (row.worm == "N2" || row.worm == "CB"),  bufferspeedstats)
 filter!(row -> (row.worm == "N2" || row.worm == "CB"),  dopaminespeedstats)
@@ -473,7 +473,7 @@ ax9a = Axis(
 )
 
 ylims!(0, 400)
-# hidedecorations!(ax9a, label = false, ticklabels = false, ticks = false)
+hidedecorations!(ax9a, label = false, ticklabels = false, ticks = false)
 
 dodge = levelcode.(bufferspeedstats.bacteria)
 
@@ -498,7 +498,7 @@ ax9b = Axis(
 )
 
 ylims!(0, 400)
-# hidedecorations!(ax9b, label = false, ticklabels = false, ticks = false)
+hidedecorations!(ax9b, label = false, ticklabels = false, ticks = false)
 
 dodge = levelcode.(dopaminespeedstats.bacteria)
 
