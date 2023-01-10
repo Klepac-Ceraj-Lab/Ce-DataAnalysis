@@ -141,7 +141,7 @@ lm(@formula(meanspeed ~ medium*bacteria), subset(trackstats, :worm=>ByRow(==("MT
 
 
 
-# comparing across mediums for WT and CB strain
+# comparing across mediums for WT and CB strains
 lm(@formula(meanspeed ~ medium*bacteria*worm), subset(trackstats, :worm=>ByRow(!=("MT"))))
 # meanspeed ~ 1 + medium + bacteria + worm + medium & bacteria + medium & worm + bacteria & worm + medium & bacteria & worm
 
@@ -161,7 +161,7 @@ lm(@formula(meanspeed ~ medium*bacteria*worm), subset(trackstats, :worm=>ByRow(!
 
 # p <1e-08 --> significant, as expected
 
-# comparing across mediums for WT and MT strain
+# comparing across mediums for WT and MT strains
 lm(@formula(meanspeed ~ medium*bacteria*worm), subset(trackstats, :worm=>ByRow(!=("CB"))))
 # meanspeed ~ 1 + medium + bacteria + worm + medium & bacteria + medium & worm + bacteria & worm + medium & bacteria & worm
 
