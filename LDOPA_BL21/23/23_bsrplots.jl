@@ -51,6 +51,7 @@ ldopaspeedstats = filter(:medium => m -> m == "LD", speedstats)
 
 # dot plot of average speeds of each track in each condition needs trackstats
 trackstats.medium = categorical(map(i-> split(i, '_')[1], trackstats.id), levels = ["M9", "LD"])
+trackstats.worm = categorical(map(i-> split(i, '_')[2], trackstats.id), levels = ["N2", "CB", "MT"])
 trackstats.bacteria = categorical(map(i-> split(i, '_')[3], trackstats.id), levels = ["NGM", "BL21"])
 trackstats.id = categorical(trackstats.id, levels=[ "LD_N2_BL21", "LD_N2_NGM",
                                             "LD_CB_BL21", "LD_CB_NGM",
