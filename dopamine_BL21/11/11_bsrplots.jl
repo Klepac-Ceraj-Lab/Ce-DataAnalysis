@@ -446,7 +446,7 @@ save(joinpath(experimentdir, "fig08.png"), fig8)
 
 
 
-# FIG 8 simplified --- only N2 and CB, only bars no dots
+# FIG 9 = FIG 8 simplified w only N2 and CB
 
 # filter out MT
 filter!(row -> (row.worm != "MT"),  bufferspeedstats)
@@ -468,7 +468,7 @@ ax9a = Axis(
     title = "Buffer",
     titlesize = 20,
     xlabel = "Worm strain",
-    xticks = (1:2, ["wild type", "cat-2"]),
+    xticks = (1:2, ["wild type", "cat-2 CB"]),
     xlabelfont = "TeX Gyre Heros Makie Bold",
     ylabel = "Average speed (µm/sec)",
     ylabelfont = "TeX Gyre Heros Makie Bold",
@@ -494,7 +494,7 @@ ax9b = Axis(
     title = "Dopamine",
     titlesize = 20,
     xlabel = "Worm strain",
-    xticks = (1:2, ["wild type", "cat-2"]),
+    xticks = (1:2, ["wild type", "cat-2 CB"]),
     xlabelfont = "TeX Gyre Heros Makie Bold",
     ylabel = "Average speed (µm/sec)",
     ylabelfont = "TeX Gyre Heros Makie Bold",
@@ -530,3 +530,90 @@ Legend(fig9[2, :],
     titleposition = :left)
 
 save(joinpath(experimentdir, "fig09.png"), fig9)
+
+
+
+# FIG 10 = FIG 8 simplified w only N2 and CB
+
+# filter out CB
+filter!(row -> (row.worm != "CB"),  bufferspeedstats)
+filter!(row -> (row.worm != "CB"),  dopaminespeedstats)
+filter!(row -> (row.worm != "CB"),  bufferno)
+filter!(row -> (row.worm != "CB"),  bufferyes)
+filter!(row -> (row.worm != "CB"),  dopamineno)
+filter!(row -> (row.worm != "CB"),  dopamineyes)
+
+
+# define error bars at middle of each dodged bar
+errorpos = [1.4, 0.6, 3.4, 2.6]
+
+fig10 = Figure(
+)
+
+ax10a = Axis(
+    fig10[1,1],
+    title = "Buffer",
+    titlesize = 20,
+    xlabel = "Worm strain",
+    xticks = ([1,3], ["wild type", "cat-2 MT"]),
+    xlabelfont = "TeX Gyre Heros Makie Bold",
+    ylabel = "Average speed (µm/sec)",
+    ylabelfont = "TeX Gyre Heros Makie Bold",
+    titlecolor = "#825ca5",
+    topspinecolor = "#FFFFFF",
+    bottomspinecolor = "#825ca5",
+    rightspinecolor = "#FFFFFF",
+)
+
+ylims!(0, 400)
+hidedecorations!(ax10a, label = false, ticklabels = false, ticks = false)
+
+dodge = levelcode.(bufferspeedstats.bacteria)
+
+barplot!(ax10a, levelcode.(bufferspeedstats.worm), bufferspeedstats.meanofmeanspeed, dodge = dodge, color = map(d->d==1 ? "#bbdaef" : "#efafcb", dodge))
+errorbars!(ax10a, errorpos, bufferspeedstats.meanofmeanspeed, bufferspeedstats.semofmeanspeed, linewidth = 2)
+
+scatter!(ax10a, bufferno.idlevel .- 0.2 .+ rand(-0.2:0.02:0.2, length(bufferno.idlevel)), bufferno.meanspeed, color = "#7ca4d7", markersize = 5)
+scatter!(ax10a, bufferyes.idlevel .+ 0.2 .+ rand(-0.2:0.02:0.2, length(bufferyes.idlevel)), bufferyes.meanspeed, color = "#d679a2", markersize = 5)
+
+ax10b = Axis(
+    fig10[1,2],
+    title = "Dopamine",
+    titlesize = 20,
+    xlabel = "Worm strain",
+    xticks = ([1,3], ["wild type", "cat-2 MT"]),
+    xlabelfont = "TeX Gyre Heros Makie Bold",
+    ylabel = "Average speed (µm/sec)",
+    ylabelfont = "TeX Gyre Heros Makie Bold",
+    titlecolor = "#5aaa46",
+    topspinecolor = "#FFFFFF",
+    bottomspinecolor = "#5aaa46",
+    leftspinecolor = "#FFFFFF",
+    rightspinecolor = "#FFFFFF",
+)
+
+ylims!(0, 400)
+hidedecorations!(ax10b, label = false, ticklabels = false, ticks = false)
+
+dodge = levelcode.(dopaminespeedstats.bacteria)
+
+barplot!(ax10b, levelcode.(dopaminespeedstats.worm), dopaminespeedstats.meanofmeanspeed, dodge = dodge, color = map(d->d==1 ? "#bbdaef" : "#efafcb", dodge))
+errorbars!(ax10b, errorpos, dopaminespeedstats.meanofmeanspeed, dopaminespeedstats.semofmeanspeed, linewidth = 2)
+
+scatter!(ax10b, dopamineno.idlevel .- 0.2 .+ rand(-0.2:0.02:0.2, length(dopamineno.idlevel)), dopamineno.meanspeed, color = "#7ca4d7", markersize = 5)
+scatter!(ax10b, dopamineyes.idlevel .+ 0.2 .+ rand(-0.2:0.02:0.2, length(dopamineyes.idlevel)), dopamineyes.meanspeed, color = "#d679a2", markersize = 5)
+
+hideydecorations!(ax10b, grid = false)
+
+
+elem_1 = [PolyElement(color = "#bbdaef")]
+elem_2 = [PolyElement(color = "#efafcb")]
+
+Legend(fig10[2, :],
+    [elem_1, elem_2],
+    ["No", "Yes"],
+    "Bacteria Presence",
+    orientation = :horizontal,
+    titleposition = :left)
+
+save(joinpath(experimentdir, "fig10.png"), fig10)
