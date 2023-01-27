@@ -118,7 +118,7 @@ lm(@formula(meanspeed ~ medium*bacteria), subset(trackstats, :worm=>ByRow(==("CB
 
 
 # comparing across mediums for MT strain
-lm(@formula(meanspeed ~ medium*bacteria), subset(trackstats, :worm=>ByRow(==("MT")))) # just MT
+lm(@formula(meanspeed ~ medium*bacteria), subset(trackstats, :worm=>ByRow(==("MT"))))
 # meanspeed ~ 1 + medium + bacteria + medium & bacteria
 
 # Coefficients:
