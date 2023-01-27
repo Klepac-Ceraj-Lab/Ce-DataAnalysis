@@ -181,6 +181,70 @@ lm(@formula(meanspeed ~ medium*bacteria*worm), subset(trackstats, :worm=>ByRow(!
 
 # p = 0.0020 --> significant, as expected
 
+
+
+# three way interaction between all variables without subsetting
+threeway = lm(@formula(meanspeed ~ medium*bacteria*worm), trackstats)
+# meanspeed ~ 1 + medium + bacteria + worm + medium & bacteria + medium & worm + bacteria & worm + medium & bacteria & worm
+
+# Coefficients:
+# ──────────────────────────────────────────────────────────────────────────────────────────────────────
+#                                             Coef.  Std. Error       t  Pr(>|t|)   Lower 95%  Upper 95%
+# ──────────────────────────────────────────────────────────────────────────────────────────────────────
+# (Intercept)                              292.938      11.2707   25.99    <1e-74   270.748     315.127
+# medium: DA                               -56.6264     14.9604   -3.79    0.0002   -86.0802    -27.1726
+# bacteria: BL21                          -171.053      14.3248  -11.94    <1e-25  -199.256    -142.851
+# worm: CB                                 -45.5792     14.1286   -3.23    0.0014   -73.3954    -17.763
+# worm: MT                                 -69.0725     14.8126   -4.66    <1e-05   -98.2354    -39.9096
+# medium: DA & bacteria: BL21               53.0266     19.118     2.77    0.0059    15.3873     90.6659
+# medium: DA & worm: CB                     53.4451     19.4345    2.75    0.0064    15.1828     91.7075
+# medium: DA & worm: MT                     44.0299     20.1138    2.19    0.0295     4.43002    83.6297
+# bacteria: BL21 & worm: CB                149.003      19.9335    7.48    <1e-11   109.758     188.248
+# bacteria: BL21 & worm: MT                123.34       19.8587    6.21    <1e-08    84.2421    162.437
+# medium: DA & bacteria: BL21 & worm: CB  -152.195      26.8373   -5.67    <1e-07  -205.032     -99.358
+# medium: DA & bacteria: BL21 & worm: MT   -89.7831     26.8553   -3.34    0.0009  -142.656     -36.9108
+# ──────────────────────────────────────────────────────────────────────────────────────────────────────
+
+# p <1e-07 comparing across N2 and CB
+# p = 0.0009 comparing across N2 and MT
+
+# two way interactions between the three variables without subsetting
+twoway = lm(@formula(meanspeed ~ medium*bacteria+medium*worm+bacteria*worm), trackstats)
+# meanspeed ~ 1 + medium + bacteria + worm + medium & bacteria + medium & worm + bacteria & worm
+
+# Coefficients:
+# ─────────────────────────────────────────────────────────────────────────────────────────────
+#                                   Coef.  Std. Error       t  Pr(>|t|)  Lower 95%    Upper 95%
+# ─────────────────────────────────────────────────────────────────────────────────────────────
+# (Intercept)                   264.629       10.4026   25.44    <1e-73   244.15     285.109
+# medium: DA                     -6.74999     12.096    -0.56    0.5773   -30.5637    17.0637
+# bacteria: BL21               -125.325       11.9149  -10.52    <1e-21  -148.782   -101.867
+# worm: CB                       -2.79521     12.6124   -0.22    0.8248   -27.6256    22.0352
+# worm: MT                      -38.6003      13.0089   -2.97    0.0033   -64.2113   -12.9892
+# medium: DA & bacteria: BL21   -28.4243      11.5287   -2.47    0.0143   -51.1211    -5.72749
+# medium: DA & worm: CB         -27.1199      14.057    -1.93    0.0547   -54.7942     0.554398
+# medium: DA & worm: MT         -10.0805      14.0277   -0.72    0.4730   -37.6972    17.5361
+# bacteria: BL21 & worm: CB      64.956       14.0732    4.62    <1e-05    37.2498    92.6623
+# bacteria: BL21 & worm: MT      73.1799      14.0951    5.19    <1e-06    45.4306   100.929
+# ─────────────────────────────────────────────────────────────────────────────────────────────
+
+ftest(threeway.model, twoway.model)
+# F-test: 2 models fitted on 282 observations
+# ─────────────────────────────────────────────────────────────────────────
+#      DOF  ΔDOF          SSR        ΔSSR      R²      ΔR²       F*   p(>F)
+# ─────────────────────────────────────────────────────────────────────────
+# [1]   13        548764.2994              0.6319                          
+# [2]   11    -2  614726.8181  65962.5187  0.5877  -0.0442  16.2273  <1e-06
+# ─────────────────────────────────────────────────────────────────────────
+
+# p <1e-06 between the two models
+# --> significant difference when taking all interactions into account vs. just two
+
+r2(threeway) # reports R^2 value for model (proportion of data explained by the model)
+# 0.6319203926150787 --> 0.632 - very good R^2
+
+
+
 # save CSVs for each subset
 CSV.write(joinpath(experimentdir, "alltracks_data.csv"), trackstats)
 CSV.write(joinpath(experimentdir, "M9_data.csv"), select(subset(trackstats, :medium=>ByRow(==("M9"))), "meanspeed", "worm", "bacteria"))
