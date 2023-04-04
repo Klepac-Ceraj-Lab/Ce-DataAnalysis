@@ -634,7 +634,7 @@ filter!(row -> (row.worm != "MT"),  dopamineyes)
 # define error bars at middle of each dodged bar
 errorpos = [1.2, 0.8, 2.2, 1.8]
 
-fontsize_theme = Theme(fontsize = 20)
+fontsize_theme = Theme(fontsize = 25)
 set_theme!(fontsize_theme)
 
 fig11 = Figure(
@@ -643,7 +643,7 @@ fig11 = Figure(
 ax11a = Axis(
     fig11[1,1],
     title = "Buffer",
-    titlesize = 30,
+    titlesize = 35,
     xlabel = "Worm strain",
     xticks = (1:2, ["wild type", "cat-2 CB"]),
     xlabelfont = "TeX Gyre Heros Makie Bold",
@@ -669,7 +669,7 @@ scatter!(ax11a, bufferyes.idlevel .+ rand(-0.1:0.01:0.1, length(bufferyes.idleve
 ax11b = Axis(
     fig11[1,2],
     title = "Dopamine",
-    titlesize = 30,
+    titlesize = 35,
     xlabel = "Worm strain",
     xticks = (1:2, ["wild type", "cat-2 CB"]),
     xlabelfont = "TeX Gyre Heros Makie Bold",
@@ -706,4 +706,4 @@ Legend(fig11[2, :],
     orientation = :horizontal,
     titleposition = :left)
 
-save(joinpath(experimentdir, "fig011.png"), fig11)
+save(joinpath(experimentdir, "fig11.png"), fig11)
