@@ -244,7 +244,7 @@ fig11 = Figure(
 ax11a = Axis(
     fig11[1,1],
     title = "IPTG(-)",
-    titlesize = 20,
+    titlesize = 35,
     xlabel = "Worm strain",
     xticks = (1:2, ["wild type", "cat-2 CB"]),
     xlabelfont = "TeX Gyre Heros Makie Bold",
@@ -271,7 +271,7 @@ errorbars!(ax11a, errorpos, waterspeedstats.meanofmeanspeed, waterspeedstats.sem
 ax11b = Axis(
     fig11[1,2],
     title = "IPTG(+)",
-    titlesize = 20,
+    titlesize = 35,
     xlabel = "Worm strain",
     xticks = (1:2, ["wild type", "cat-2 CB"]),
     xlabelfont = "TeX Gyre Heros Makie Bold",
