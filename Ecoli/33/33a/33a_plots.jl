@@ -227,3 +227,86 @@ Legend(fig9[2, :],
     titleposition = :left)
 
 save(joinpath(experimentdir, "fig09.png"), fig9)
+
+
+
+# FIG 11 = FIG 9 w larger text
+
+# define error bars at middle of each dodged bar
+errorpos = [1.2, 0.8, 2.2, 1.8]
+
+fontsize_theme = Theme(fontsize = 25)
+set_theme!(fontsize_theme)
+
+fig11 = Figure(
+)
+
+ax11a = Axis(
+    fig11[1,1],
+    title = "IPTG(-)",
+    titlesize = 20,
+    xlabel = "Worm strain",
+    xticks = (1:2, ["wild type", "cat-2 CB"]),
+    xlabelfont = "TeX Gyre Heros Makie Bold",
+    ylabel = "Average speed (µm/sec)",
+    ylabelfont = "TeX Gyre Heros Makie Bold",
+    titlecolor = "#825ca5",
+    topspinecolor = "#FFFFFF",
+    bottomspinecolor = "#825ca5",
+    rightspinecolor = "#FFFFFF",
+)
+
+ylims!(0, 400)
+hidedecorations!(ax11a, label = false, ticklabels = false, ticks = false)
+
+dodge = levelcode.(waterspeedstats.bacteria)
+
+barplot!(ax11a, levelcode.(waterspeedstats.worm), waterspeedstats.meanofmeanspeed, dodge = dodge, color = map(d->d==1 ? "#bbdaef" : "#efafcb", dodge))
+
+scatter!(ax11a, waterno.idlevel .+ rand(-0.1:0.01:0.1, length(waterno.idlevel)), waterno.meanspeed, color = "#7ca4d7", markersize = 5)
+scatter!(ax11a, wateryes.idlevel .+ rand(-0.1:0.01:0.1, length(wateryes.idlevel)), wateryes.meanspeed, color = "#d679a2", markersize = 5)
+
+errorbars!(ax11a, errorpos, waterspeedstats.meanofmeanspeed, waterspeedstats.semofmeanspeed, linewidth = 2)
+
+ax11b = Axis(
+    fig11[1,2],
+    title = "IPTG(+)",
+    titlesize = 20,
+    xlabel = "Worm strain",
+    xticks = (1:2, ["wild type", "cat-2 CB"]),
+    xlabelfont = "TeX Gyre Heros Makie Bold",
+    ylabel = "Average speed (µm/sec)",
+    ylabelfont = "TeX Gyre Heros Makie Bold",
+    titlecolor = "#5aaa46",
+    topspinecolor = "#FFFFFF",
+    bottomspinecolor = "#5aaa46",
+    leftspinecolor = "#FFFFFF",
+    rightspinecolor = "#FFFFFF",
+)
+
+ylims!(0, 400)
+hidedecorations!(ax11b, label = false, ticklabels = false, ticks = false)
+
+dodge = levelcode.(iptgspeedstats.bacteria)
+
+barplot!(ax11b, levelcode.(iptgspeedstats.worm), iptgspeedstats.meanofmeanspeed, dodge = dodge, color = map(d->d==1 ? "#bbdaef" : "#efafcb", dodge))
+
+scatter!(ax11b, iptgno.idlevel .+ rand(-0.1:0.01:0.1, length(iptgno.idlevel)), iptgno.meanspeed, color = "#7ca4d7", markersize = 5)
+scatter!(ax11b, iptgyes.idlevel .+ rand(-0.1:0.01:0.1, length(iptgyes.idlevel)), iptgyes.meanspeed, color = "#d679a2", markersize = 5)
+
+errorbars!(ax11b, errorpos, iptgspeedstats.meanofmeanspeed, iptgspeedstats.semofmeanspeed, linewidth = 2)
+
+hideydecorations!(ax11b, grid = false)
+
+
+elem_1 = [PolyElement(color = "#bbdaef")]
+elem_2 = [PolyElement(color = "#efafcb")]
+
+Legend(fig11[2, :],
+    [elem_1, elem_2],
+    ["No", "Yes"],
+    "Bacteria Presence",
+    orientation = :horizontal,
+    titleposition = :left)
+
+save(joinpath(experimentdir, "fig11.png"), fig11)
