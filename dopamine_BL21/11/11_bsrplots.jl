@@ -661,10 +661,11 @@ hidedecorations!(ax11a, label = false, ticklabels = false, ticks = false)
 dodge = levelcode.(bufferspeedstats.bacteria)
 
 barplot!(ax11a, levelcode.(bufferspeedstats.worm), bufferspeedstats.meanofmeanspeed, dodge = dodge, color = map(d->d==1 ? "#bbdaef" : "#efafcb", dodge))
-errorbars!(ax11a, errorpos, bufferspeedstats.meanofmeanspeed, bufferspeedstats.semofmeanspeed, linewidth = 2)
 
 scatter!(ax11a, bufferno.idlevel .+ rand(-0.1:0.01:0.1, length(bufferno.idlevel)), bufferno.meanspeed, color = "#7ca4d7", markersize = 5)
 scatter!(ax11a, bufferyes.idlevel .+ rand(-0.1:0.01:0.1, length(bufferyes.idlevel)), bufferyes.meanspeed, color = "#d679a2", markersize = 5)
+
+errorbars!(ax11a, errorpos, bufferspeedstats.meanofmeanspeed, bufferspeedstats.semofmeanspeed, linewidth = 2)
 
 ax11b = Axis(
     fig11[1,2],
@@ -688,10 +689,11 @@ hidedecorations!(ax11b, label = false, ticklabels = false, ticks = false)
 dodge = levelcode.(dopaminespeedstats.bacteria)
 
 barplot!(ax11b, levelcode.(dopaminespeedstats.worm), dopaminespeedstats.meanofmeanspeed, dodge = dodge, color = map(d->d==1 ? "#bbdaef" : "#efafcb", dodge))
-errorbars!(ax11b, errorpos, dopaminespeedstats.meanofmeanspeed, dopaminespeedstats.semofmeanspeed, linewidth = 2)
 
 scatter!(ax11b, dopamineno.idlevel .+ rand(-0.1:0.01:0.1, length(dopamineno.idlevel)), dopamineno.meanspeed, color = "#7ca4d7", markersize = 5)
 scatter!(ax11b, dopamineyes.idlevel .+ rand(-0.1:0.01:0.1, length(dopamineyes.idlevel)), dopamineyes.meanspeed, color = "#d679a2", markersize = 5)
+
+errorbars!(ax11b, errorpos, dopaminespeedstats.meanofmeanspeed, dopaminespeedstats.semofmeanspeed, linewidth = 2)
 
 hideydecorations!(ax11b, grid = false)
 
