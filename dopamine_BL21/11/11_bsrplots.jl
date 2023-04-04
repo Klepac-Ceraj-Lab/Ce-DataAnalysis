@@ -617,3 +617,93 @@ Legend(fig10[2, :],
     titleposition = :left)
 
 save(joinpath(experimentdir, "fig10.png"), fig10)
+
+
+
+# FIG 11 = FIG 9 w larger text
+
+# filter out MT
+filter!(row -> (row.worm != "MT"),  bufferspeedstats)
+filter!(row -> (row.worm != "MT"),  dopaminespeedstats)
+filter!(row -> (row.worm != "MT"),  bufferno)
+filter!(row -> (row.worm != "MT"),  bufferyes)
+filter!(row -> (row.worm != "MT"),  dopamineno)
+filter!(row -> (row.worm != "MT"),  dopamineyes)
+
+
+# define error bars at middle of each dodged bar
+errorpos = [1.2, 0.8, 2.2, 1.8]
+
+fontsize_theme = Theme(fontsize = 20)
+set_theme!(fontsize_theme)
+
+fig11 = Figure(
+)
+
+ax11a = Axis(
+    fig11[1,1],
+    title = "Buffer",
+    titlesize = 30,
+    xlabel = "Worm strain",
+    xticks = (1:2, ["wild type", "cat-2 CB"]),
+    xlabelfont = "TeX Gyre Heros Makie Bold",
+    ylabel = "Average speed (µm/sec)",
+    ylabelfont = "TeX Gyre Heros Makie Bold",
+    titlecolor = "#825ca5",
+    topspinecolor = "#FFFFFF",
+    bottomspinecolor = "#825ca5",
+    rightspinecolor = "#FFFFFF",
+)
+
+ylims!(0, 400)
+hidedecorations!(ax11a, label = false, ticklabels = false, ticks = false)
+
+dodge = levelcode.(bufferspeedstats.bacteria)
+
+barplot!(ax11a, levelcode.(bufferspeedstats.worm), bufferspeedstats.meanofmeanspeed, dodge = dodge, color = map(d->d==1 ? "#bbdaef" : "#efafcb", dodge))
+errorbars!(ax11a, errorpos, bufferspeedstats.meanofmeanspeed, bufferspeedstats.semofmeanspeed, linewidth = 2)
+
+scatter!(ax11a, bufferno.idlevel .+ rand(-0.1:0.01:0.1, length(bufferno.idlevel)), bufferno.meanspeed, color = "#7ca4d7", markersize = 5)
+scatter!(ax11a, bufferyes.idlevel .+ rand(-0.1:0.01:0.1, length(bufferyes.idlevel)), bufferyes.meanspeed, color = "#d679a2", markersize = 5)
+
+ax11b = Axis(
+    fig11[1,2],
+    title = "Dopamine",
+    titlesize = 30,
+    xlabel = "Worm strain",
+    xticks = (1:2, ["wild type", "cat-2 CB"]),
+    xlabelfont = "TeX Gyre Heros Makie Bold",
+    ylabel = "Average speed (µm/sec)",
+    ylabelfont = "TeX Gyre Heros Makie Bold",
+    titlecolor = "#5aaa46",
+    topspinecolor = "#FFFFFF",
+    bottomspinecolor = "#5aaa46",
+    leftspinecolor = "#FFFFFF",
+    rightspinecolor = "#FFFFFF",
+)
+
+ylims!(0, 400)
+hidedecorations!(ax11b, label = false, ticklabels = false, ticks = false)
+
+dodge = levelcode.(dopaminespeedstats.bacteria)
+
+barplot!(ax11b, levelcode.(dopaminespeedstats.worm), dopaminespeedstats.meanofmeanspeed, dodge = dodge, color = map(d->d==1 ? "#bbdaef" : "#efafcb", dodge))
+errorbars!(ax11b, errorpos, dopaminespeedstats.meanofmeanspeed, dopaminespeedstats.semofmeanspeed, linewidth = 2)
+
+scatter!(ax11b, dopamineno.idlevel .+ rand(-0.1:0.01:0.1, length(dopamineno.idlevel)), dopamineno.meanspeed, color = "#7ca4d7", markersize = 5)
+scatter!(ax11b, dopamineyes.idlevel .+ rand(-0.1:0.01:0.1, length(dopamineyes.idlevel)), dopamineyes.meanspeed, color = "#d679a2", markersize = 5)
+
+hideydecorations!(ax11b, grid = false)
+
+
+elem_1 = [PolyElement(color = "#bbdaef")]
+elem_2 = [PolyElement(color = "#efafcb")]
+
+Legend(fig11[2, :],
+    [elem_1, elem_2],
+    ["No", "Yes"],
+    "Bacteria Presence",
+    orientation = :horizontal,
+    titleposition = :left)
+
+save(joinpath(experimentdir, "fig011.png"), fig11)
