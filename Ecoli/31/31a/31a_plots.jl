@@ -28,6 +28,13 @@ speedstats = combine(conditions, :meanspeed => mean => :meanofmeanspeed, :meansp
 
 
 
+# SAVE SUMMARY STATS DATAFRAME
+summarystatscsv = joinpath(experimentdir, "summarystats.csv")
+
+CSV.write(summarystatscsv, speedstats)
+
+
+
 # MAKE CATEGORICAL ARRAYS FOR PLOTTING
 speedstats.medium = categorical(map(i-> split(i, '_')[1], speedstats.id), levels = ["H2O", "IPTG"])
 speedstats.worm = categorical(map(i-> split(i, '_')[2], speedstats.id), levels = ["N2", "CB"])
